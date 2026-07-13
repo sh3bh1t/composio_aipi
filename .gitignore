@@ -1,0 +1,45 @@
+# Composio AI Product Ops Research System
+.agent/
+
+# Virtual Environment
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Environment
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Generated outputs (large files)
+data/discovery_results.json
+data/evidence_bundles.json
+data/classification_results.json
+data/verification_results.json
+data/audit_worksheet.json
+data/final_dataset.json
+data/final_dataset.csv
+data/composio_toolkits.json
+
+# Keep app_seeds.json tracked
+!data/app_seeds.json
+
+# Output
+output/
