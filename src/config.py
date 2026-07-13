@@ -29,8 +29,8 @@ class Settings(BaseSettings):
     # --- Rate Limiting ---
     max_rpm: int = 25  # Requests per minute (conservative for free tier)
     request_delay_seconds: float = 2.5  # Delay between requests
-    max_retries: int = 3
-    retry_base_delay: float = 5.0  # Base delay for exponential backoff
+    max_retries: int = 15
+    retry_base_delay: float = 2.0  # Base delay for exponential backoff
 
     # --- Web Crawling ---
     crawl_timeout_seconds: int = 15

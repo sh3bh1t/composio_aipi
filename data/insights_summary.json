@@ -93,105 +93,445 @@
       "category": "Communications and Messaging",
       "score": 10,
       "level": "High",
-      "rationale": "Self-serve access (+3); Bearer Token auth (+2); REST API (+2); Public docs (+2); MCP available (+1); \ud83c\udd95 New opportunity for Composio"
+      "rationale": [
+        {
+          "text": "Self-serve access",
+          "score": 3,
+          "type": "positive"
+        },
+        {
+          "text": "Bearer Token auth",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "REST API",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "Public docs",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "MCP available",
+          "score": 1,
+          "type": "positive"
+        }
+      ]
     },
     {
       "app": "Meta Ads",
       "category": "Marketing, Ads, Email and Social",
       "score": 10,
       "level": "High",
-      "rationale": "Self-serve access (+3); OAuth2 auth (+2); REST API (+2); Public docs (+2); MCP available (+1); \ud83c\udd95 New opportunity for Composio"
+      "rationale": [
+        {
+          "text": "Self-serve access",
+          "score": 3,
+          "type": "positive"
+        },
+        {
+          "text": "OAuth2 auth",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "REST API",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "Public docs",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "MCP available",
+          "score": 1,
+          "type": "positive"
+        }
+      ]
     },
     {
       "app": "Threads (Meta)",
       "category": "Marketing, Ads, Email and Social",
       "score": 10,
       "level": "High",
-      "rationale": "Self-serve access (+3); OAuth2 auth (+2); REST API (+2); Public docs (+2); MCP available (+1); \ud83c\udd95 New opportunity for Composio"
+      "rationale": [
+        {
+          "text": "Self-serve access",
+          "score": 3,
+          "type": "positive"
+        },
+        {
+          "text": "OAuth2 auth",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "REST API",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "Public docs",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "MCP available",
+          "score": 1,
+          "type": "positive"
+        }
+      ]
     },
     {
       "app": "Bright Data",
       "category": "Data, SEO and Scraping",
       "score": 10,
       "level": "High",
-      "rationale": "Self-serve access (+3); API Key auth (+2); REST API (+2); Public docs (+2); MCP available (+1); \ud83c\udd95 New opportunity for Composio"
+      "rationale": [
+        {
+          "text": "Self-serve access",
+          "score": 3,
+          "type": "positive"
+        },
+        {
+          "text": "API Key auth",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "REST API",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "Public docs",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "MCP available",
+          "score": 1,
+          "type": "positive"
+        }
+      ]
     },
     {
       "app": "Monday.com",
       "category": "Productivity and Project Management",
       "score": 10,
       "level": "High",
-      "rationale": "Self-serve access (+3); OAuth2 auth (+2); GraphQL API (+2); Public docs (+2); MCP available (+1); \ud83c\udd95 New opportunity for Composio"
+      "rationale": [
+        {
+          "text": "Self-serve access",
+          "score": 3,
+          "type": "positive"
+        },
+        {
+          "text": "OAuth2 auth",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "GraphQL API",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "Public docs",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "MCP available",
+          "score": 1,
+          "type": "positive"
+        }
+      ]
     },
     {
       "app": "Smartsheet",
       "category": "Productivity and Project Management",
       "score": 10,
       "level": "High",
-      "rationale": "Self-serve access (+3); OAuth2 auth (+2); REST API (+2); Public docs (+2); MCP available (+1); \ud83c\udd95 New opportunity for Composio"
+      "rationale": [
+        {
+          "text": "Self-serve access",
+          "score": 3,
+          "type": "positive"
+        },
+        {
+          "text": "OAuth2 auth",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "REST API",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "Public docs",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "MCP available",
+          "score": 1,
+          "type": "positive"
+        }
+      ]
     },
     {
       "app": "Consensus",
       "category": "AI, Research and Media-native",
       "score": 10,
       "level": "High",
-      "rationale": "Self-serve access (+3); OAuth2 auth (+2); REST API (+2); Public docs (+2); MCP available (+1); \ud83c\udd95 New opportunity for Composio"
+      "rationale": [
+        {
+          "text": "Self-serve access",
+          "score": 3,
+          "type": "positive"
+        },
+        {
+          "text": "OAuth2 auth",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "REST API",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "Public docs",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "MCP available",
+          "score": 1,
+          "type": "positive"
+        }
+      ]
     },
     {
       "app": "Podio",
       "category": "CRM and Sales",
       "score": 9,
       "level": "High",
-      "rationale": "Self-serve access (+3); API Key auth (+2); REST API (+2); Public docs (+2); \ud83c\udd95 New opportunity for Composio"
+      "rationale": [
+        {
+          "text": "Self-serve access",
+          "score": 3,
+          "type": "positive"
+        },
+        {
+          "text": "API Key auth",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "REST API",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "Public docs",
+          "score": 2,
+          "type": "positive"
+        }
+      ]
     },
     {
       "app": "systeme.io",
       "category": "Marketing, Ads, Email and Social",
       "score": 9,
       "level": "High",
-      "rationale": "Self-serve access (+3); API Key auth (+2); REST API (+2); Public docs (+2); \ud83c\udd95 New opportunity for Composio"
+      "rationale": [
+        {
+          "text": "Self-serve access",
+          "score": 3,
+          "type": "positive"
+        },
+        {
+          "text": "API Key auth",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "REST API",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "Public docs",
+          "score": 2,
+          "type": "positive"
+        }
+      ]
     },
     {
       "app": "WooCommerce",
       "category": "Ecommerce",
       "score": 9,
       "level": "High",
-      "rationale": "Self-serve access (+3); API Key auth (+2); REST API (+2); Public docs (+2); \ud83c\udd95 New opportunity for Composio"
+      "rationale": [
+        {
+          "text": "Self-serve access",
+          "score": 3,
+          "type": "positive"
+        },
+        {
+          "text": "API Key auth",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "REST API",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "Public docs",
+          "score": 2,
+          "type": "positive"
+        }
+      ]
     },
     {
       "app": "MongoDB Atlas",
       "category": "Developer, Infra and Data Platforms",
       "score": 9,
       "level": "High",
-      "rationale": "Self-serve access (+3); API Key auth (+2); REST API (+2); Public docs (+2); \ud83c\udd95 New opportunity for Composio"
+      "rationale": [
+        {
+          "text": "Self-serve access",
+          "score": 3,
+          "type": "positive"
+        },
+        {
+          "text": "API Key auth",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "REST API",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "Public docs",
+          "score": 2,
+          "type": "positive"
+        }
+      ]
     },
     {
       "app": "NotebookLM",
       "category": "AI, Research and Media-native",
       "score": 9,
       "level": "High",
-      "rationale": "Self-serve access (+3); API Key auth (+2); REST API (+2); Public docs (+2); \ud83c\udd95 New opportunity for Composio"
+      "rationale": [
+        {
+          "text": "Self-serve access",
+          "score": 3,
+          "type": "positive"
+        },
+        {
+          "text": "API Key auth",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "REST API",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "Public docs",
+          "score": 2,
+          "type": "positive"
+        }
+      ]
     },
     {
       "app": "DealCloud",
       "category": "CRM and Sales",
       "score": 8,
       "level": "High",
-      "rationale": "Self-serve access (+3); REST API (+2); Public docs (+2); MCP available (+1); \ud83c\udd95 New opportunity for Composio"
+      "rationale": [
+        {
+          "text": "Self-serve access",
+          "score": 3,
+          "type": "positive"
+        },
+        {
+          "text": "REST API",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "Public docs",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "MCP available",
+          "score": 1,
+          "type": "positive"
+        }
+      ]
     },
     {
       "app": "Help Scout",
       "category": "Support and Helpdesk",
       "score": 7,
       "level": "High",
-      "rationale": "Self-serve access (+3); REST API (+2); Public docs (+2); \ud83c\udd95 New opportunity for Composio"
+      "rationale": [
+        {
+          "text": "Self-serve access",
+          "score": 3,
+          "type": "positive"
+        },
+        {
+          "text": "REST API",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "Public docs",
+          "score": 2,
+          "type": "positive"
+        }
+      ]
     },
     {
       "app": "Gladly",
       "category": "Support and Helpdesk",
       "score": 7,
       "level": "High",
-      "rationale": "Self-serve access (+3); REST API (+2); Public docs (+2); \ud83c\udd95 New opportunity for Composio"
+      "rationale": [
+        {
+          "text": "Self-serve access",
+          "score": 3,
+          "type": "positive"
+        },
+        {
+          "text": "REST API",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "Public docs",
+          "score": 2,
+          "type": "positive"
+        }
+      ]
     }
   ],
   "pct_self_serve": 60.0,

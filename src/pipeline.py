@@ -307,7 +307,7 @@ def build_final_dataset(
             app_id=app_id,
             app_name=app["name"],
             category=app.get("category_name", resolved.category),
-            one_line_description=resolved.one_line_description,
+            one_line_description=app.get("hint", ""),
             auth_method=resolved.auth_method.value,
             access_model=resolved.access_model.value,
             api_type=resolved.api_type.value,

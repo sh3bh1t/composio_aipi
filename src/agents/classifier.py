@@ -219,7 +219,7 @@ async def classify_batch(
         client = _get_groq_client()
 
     # Max 3 concurrent to stay safe with 30 RPM limit on free tier
-    semaphore = asyncio.Semaphore(3)
+    semaphore = asyncio.Semaphore(2)
     
     tasks = [
         classify_app(bundle, client, semaphore)

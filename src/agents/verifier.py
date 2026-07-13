@@ -187,8 +187,8 @@ async def verify_batch(
 
     class_by_id = {c.app_id: c for c in classifications}
     
-    # Qwen has 60 RPM limit, so concurrency of 5 is safe
-    semaphore = asyncio.Semaphore(5)
+    # Qwen has 60 RPM limit, so concurrency of 2 is safe
+    semaphore = asyncio.Semaphore(2)
     
     tasks = []
     for bundle in bundles:
