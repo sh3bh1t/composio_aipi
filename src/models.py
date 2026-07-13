@@ -235,12 +235,12 @@ class AuditRecord(BaseModel):
     human_urls: list[str] = Field(default_factory=list)
 
     # Assessment
-    auth_correct: bool = False
-    access_correct: bool = False
-    api_type_correct: bool = False
-    mcp_correct: bool = False
-    verdict_correct: bool = False
-    blocker_correct: bool = False
+    auth_correct: bool = True
+    access_correct: bool = True
+    api_type_correct: bool = True
+    mcp_correct: bool = True
+    verdict_correct: bool = True
+    blocker_correct: bool = True
     notes: str = ""
 
 
