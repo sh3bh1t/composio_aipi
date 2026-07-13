@@ -6,11 +6,12 @@ and parses the structured JSON response into a ResearchResult.
 
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 import time
 
-from groq import Groq
+from groq import AsyncGroq, RateLimitError
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 
 from src.config import settings
@@ -28,13 +29,13 @@ from src.agents.prompts import CLASSIFICATION_SYSTEM_PROMPT, build_classificatio
 logger = logging.getLogger(__name__)
 
 
-def _get_groq_client() -> Groq:
+def _get_groq_client() -> AsyncGroq:
     """Create a Groq client instance."""
     if not settings.groq_api_key:
         raise ValueError(
             "GROQ_API_KEY not set. Copy .env.example to .env and add your key."
         )
-    return Groq(api_key=settings.groq_api_key)
+    return AsyncGroq(api_key=settings.groq_api_key, max_retries=2)
 
 
 @retry(
@@ -50,25 +51,34 @@ def _get_groq_client() -> Groq:
         f"after error: {retry_state.outcome.exception()}"
     ),
 )
-def _call_groq(
-    client: Groq,
+async def _call_groq(
+    client: AsyncGroq,
     system_prompt: str,
     user_prompt: str,
     model: str,
     temperature: float,
 ) -> str:
     """Make a Groq API call with retry logic."""
-    response = client.chat.completions.create(
-        model=model,
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt},
-        ],
-        temperature=temperature,
-        max_tokens=settings.max_tokens,
-        response_format={"type": "json_object"},
-    )
-    return response.choices[0].message.content or ""
+    try:
+        response = await client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            temperature=temperature,
+            max_tokens=settings.max_tokens,
+            response_format={"type": "json_object"},
+        )
+        return response.choices[0].message.content or ""
+    except RateLimitError as e:
+        # Check for retry-after header
+        retry_after = e.response.headers.get("retry-after")
+        if retry_after:
+            delay = float(retry_after)
+            logger.warning(f"Rate limited. Sleeping for {delay} seconds based on header...")
+            await asyncio.sleep(delay)
+        raise e
 
 
 def _parse_auth_method(value: str) -> AuthMethod:
@@ -138,94 +148,85 @@ def _parse_build_verdict(value: str) -> BuildVerdict:
     return mapping.get(value_lower, BuildVerdict.UNKNOWN)
 
 
-def classify_app(
+async def classify_app(
     bundle: EvidenceBundle,
-    client: Groq | None = None,
+    client: AsyncGroq | None = None,
+    semaphore: asyncio.Semaphore | None = None,
 ) -> ResearchResult:
-    """Classify a single app using the primary LLM.
-
-    Takes evidence bundle → compact prompt → Groq API → parsed ResearchResult.
-    """
+    """Classify a single app using the primary LLM."""
     if client is None:
         client = _get_groq_client()
 
     evidence_text = bundle_to_llm_prompt(bundle)
     user_prompt = build_classification_prompt(evidence_text)
 
-    logger.info(f"[{bundle.app_name}] Sending to {settings.primary_model} for classification")
+    async def _do_work():
+        logger.info(f"[{bundle.app_name}] Sending to {settings.primary_model} for classification")
+        try:
+            raw_response = await _call_groq(
+                client=client,
+                system_prompt=CLASSIFICATION_SYSTEM_PROMPT,
+                user_prompt=user_prompt,
+                model=settings.primary_model,
+                temperature=settings.primary_temperature,
+            )
 
-    try:
-        raw_response = _call_groq(
-            client=client,
-            system_prompt=CLASSIFICATION_SYSTEM_PROMPT,
-            user_prompt=user_prompt,
-            model=settings.primary_model,
-            temperature=settings.primary_temperature,
-        )
+            parsed = json.loads(raw_response)
 
-        parsed = json.loads(raw_response)
+            result = ResearchResult(
+                app_id=bundle.app_id,
+                app_name=bundle.app_name,
+                category=bundle.category_name,
+                one_line_description=parsed.get("one_line_description", ""),
+                auth_method=_parse_auth_method(parsed.get("auth_method", "Unknown")),
+                access_model=_parse_access_model(parsed.get("access_model", "Unknown")),
+                api_type=_parse_api_type(parsed.get("api_type", "Unknown")),
+                has_mcp=parsed.get("has_mcp", False),
+                mcp_details=parsed.get("mcp_details", ""),
+                build_verdict=_parse_build_verdict(parsed.get("build_verdict", "Unknown")),
+                main_blocker=parsed.get("main_blocker", ""),
+                evidence_urls=parsed.get("evidence_urls", []),
+                llm_reasoning=parsed.get("reasoning", ""),
+                raw_llm_response=raw_response,
+            )
 
-        result = ResearchResult(
-            app_id=bundle.app_id,
-            app_name=bundle.app_name,
-            category=bundle.category_name,
-            one_line_description=parsed.get("one_line_description", ""),
-            auth_method=_parse_auth_method(parsed.get("auth_method", "Unknown")),
-            access_model=_parse_access_model(parsed.get("access_model", "Unknown")),
-            api_type=_parse_api_type(parsed.get("api_type", "Unknown")),
-            has_mcp=parsed.get("has_mcp", False),
-            mcp_details=parsed.get("mcp_details", ""),
-            build_verdict=_parse_build_verdict(parsed.get("build_verdict", "Unknown")),
-            main_blocker=parsed.get("main_blocker", ""),
-            evidence_urls=parsed.get("evidence_urls", []),
-            llm_reasoning=parsed.get("reasoning", ""),
-            raw_llm_response=raw_response,
-        )
+            if not result.evidence_urls and bundle.docs_url:
+                result.evidence_urls = [bundle.docs_url]
 
-        # Supplement evidence_urls from the bundle if LLM didn't provide any
-        if not result.evidence_urls and bundle.docs_url:
-            result.evidence_urls = [bundle.docs_url]
+            logger.info(f"[{bundle.app_name}] Classified: {result.auth_method.value}")
+            return result
 
-        logger.info(
-            f"[{bundle.app_name}] Classified: auth={result.auth_method.value}, "
-            f"api={result.api_type.value}, access={result.access_model.value}, "
-            f"verdict={result.build_verdict.value}"
-        )
-        return result
+        except json.JSONDecodeError as e:
+            logger.error(f"[{bundle.app_name}] Failed to parse LLM JSON: {e}")
+            return _fallback_result(bundle, str(e))
+        except Exception as e:
+            logger.error(f"[{bundle.app_name}] Classification failed: {e}")
+            return _fallback_result(bundle, str(e))
 
-    except json.JSONDecodeError as e:
-        logger.error(f"[{bundle.app_name}] Failed to parse LLM JSON: {e}")
-        return _fallback_result(bundle, str(e))
-    except Exception as e:
-        logger.error(f"[{bundle.app_name}] Classification failed: {e}")
-        return _fallback_result(bundle, str(e))
+    if semaphore:
+        async with semaphore:
+            return await _do_work()
+    else:
+        return await _do_work()
 
 
-def classify_batch(
+async def classify_batch(
     bundles: list[EvidenceBundle],
-    client: Groq | None = None,
+    client: AsyncGroq | None = None,
 ) -> list[ResearchResult]:
-    """Classify a batch of apps with rate limiting.
-
-    Processes sequentially with delays to respect Groq free tier limits.
-    Saves progress after each app for checkpoint/resume.
-    """
+    """Classify a batch of apps asynchronously with strict concurrency limits."""
     if client is None:
         client = _get_groq_client()
 
-    results: list[ResearchResult] = []
-
-    for i, bundle in enumerate(bundles):
-        logger.info(f"Classifying [{i + 1}/{len(bundles)}] {bundle.app_name}")
-
-        result = classify_app(bundle, client)
-        results.append(result)
-
-        # Rate limiting: wait between requests
-        if i < len(bundles) - 1:
-            time.sleep(settings.request_delay_seconds)
-
-    return results
+    # Max 3 concurrent to stay safe with 30 RPM limit on free tier
+    semaphore = asyncio.Semaphore(3)
+    
+    tasks = [
+        classify_app(bundle, client, semaphore)
+        for bundle in bundles
+    ]
+    
+    return await asyncio.gather(*tasks)
 
 
 def _fallback_result(bundle: EvidenceBundle, error: str) -> ResearchResult:

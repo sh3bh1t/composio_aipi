@@ -1,0 +1,207 @@
+{
+  "total_apps": 100,
+  "auth_distribution": {
+    "Unknown": 42,
+    "OAuth2": 29,
+    "API Key": 21,
+    "Bearer Token": 5,
+    "Mixed": 1,
+    "None": 2
+  },
+  "access_distribution": {
+    "Unknown": 31,
+    "Self-Serve": 52,
+    "Open Source": 6,
+    "Gated": 9,
+    "Freemium": 2
+  },
+  "api_type_distribution": {
+    "Unknown": 28,
+    "REST": 65,
+    "GraphQL": 3,
+    "Mixed": 2,
+    "CLI Only": 2
+  },
+  "mcp_distribution": {
+    "Has MCP": 39,
+    "No MCP": 61
+  },
+  "category_distribution": {
+    "CRM and Sales": 10,
+    "Support and Helpdesk": 10,
+    "Communications and Messaging": 10,
+    "Marketing, Ads, Email and Social": 10,
+    "Ecommerce": 10,
+    "Data, SEO and Scraping": 10,
+    "Developer, Infra and Data Platforms": 10,
+    "Productivity and Project Management": 10,
+    "Finance and Fintech": 10,
+    "AI, Research and Media-native": 10
+  },
+  "verdict_distribution": {
+    "Unknown": 18,
+    "Easy": 45,
+    "Moderate": 19,
+    "Not Feasible": 13,
+    "Hard": 5
+  },
+  "top_blockers": [
+    {
+      "blocker": "No evidence of a public API or authentication details",
+      "count": 2
+    },
+    {
+      "blocker": "No public API or authentication details found in the provided evidence",
+      "count": 2
+    },
+    {
+      "blocker": "No public documentation or API information available",
+      "count": 2
+    },
+    {
+      "blocker": "No technical API documentation or auth details provided",
+      "count": 1
+    },
+    {
+      "blocker": "Authentication method not documented in the provided excerpts",
+      "count": 1
+    },
+    {
+      "blocker": "No clear public API specification (REST/GraphQL) documented",
+      "count": 1
+    },
+    {
+      "blocker": "Potential gating of API access requiring sales contact and limited public documentation",
+      "count": 1
+    },
+    {
+      "blocker": "Authentication method for API access is not documented in the provided evidence",
+      "count": 1
+    },
+    {
+      "blocker": "Authentication method and token acquisition are not documented, making integration uncertain",
+      "count": 1
+    },
+    {
+      "blocker": "No public API documentation found",
+      "count": 1
+    }
+  ],
+  "top_opportunities": [
+    {
+      "app": "WhatsApp Business",
+      "category": "Communications and Messaging",
+      "score": 10,
+      "level": "High",
+      "rationale": "Self-serve access (+3); Bearer Token auth (+2); REST API (+2); Public docs (+2); MCP available (+1); \ud83c\udd95 New opportunity for Composio"
+    },
+    {
+      "app": "Meta Ads",
+      "category": "Marketing, Ads, Email and Social",
+      "score": 10,
+      "level": "High",
+      "rationale": "Self-serve access (+3); OAuth2 auth (+2); REST API (+2); Public docs (+2); MCP available (+1); \ud83c\udd95 New opportunity for Composio"
+    },
+    {
+      "app": "Threads (Meta)",
+      "category": "Marketing, Ads, Email and Social",
+      "score": 10,
+      "level": "High",
+      "rationale": "Self-serve access (+3); OAuth2 auth (+2); REST API (+2); Public docs (+2); MCP available (+1); \ud83c\udd95 New opportunity for Composio"
+    },
+    {
+      "app": "Bright Data",
+      "category": "Data, SEO and Scraping",
+      "score": 10,
+      "level": "High",
+      "rationale": "Self-serve access (+3); API Key auth (+2); REST API (+2); Public docs (+2); MCP available (+1); \ud83c\udd95 New opportunity for Composio"
+    },
+    {
+      "app": "Monday.com",
+      "category": "Productivity and Project Management",
+      "score": 10,
+      "level": "High",
+      "rationale": "Self-serve access (+3); OAuth2 auth (+2); GraphQL API (+2); Public docs (+2); MCP available (+1); \ud83c\udd95 New opportunity for Composio"
+    },
+    {
+      "app": "Smartsheet",
+      "category": "Productivity and Project Management",
+      "score": 10,
+      "level": "High",
+      "rationale": "Self-serve access (+3); OAuth2 auth (+2); REST API (+2); Public docs (+2); MCP available (+1); \ud83c\udd95 New opportunity for Composio"
+    },
+    {
+      "app": "Consensus",
+      "category": "AI, Research and Media-native",
+      "score": 10,
+      "level": "High",
+      "rationale": "Self-serve access (+3); OAuth2 auth (+2); REST API (+2); Public docs (+2); MCP available (+1); \ud83c\udd95 New opportunity for Composio"
+    },
+    {
+      "app": "Podio",
+      "category": "CRM and Sales",
+      "score": 9,
+      "level": "High",
+      "rationale": "Self-serve access (+3); API Key auth (+2); REST API (+2); Public docs (+2); \ud83c\udd95 New opportunity for Composio"
+    },
+    {
+      "app": "systeme.io",
+      "category": "Marketing, Ads, Email and Social",
+      "score": 9,
+      "level": "High",
+      "rationale": "Self-serve access (+3); API Key auth (+2); REST API (+2); Public docs (+2); \ud83c\udd95 New opportunity for Composio"
+    },
+    {
+      "app": "WooCommerce",
+      "category": "Ecommerce",
+      "score": 9,
+      "level": "High",
+      "rationale": "Self-serve access (+3); API Key auth (+2); REST API (+2); Public docs (+2); \ud83c\udd95 New opportunity for Composio"
+    },
+    {
+      "app": "MongoDB Atlas",
+      "category": "Developer, Infra and Data Platforms",
+      "score": 9,
+      "level": "High",
+      "rationale": "Self-serve access (+3); API Key auth (+2); REST API (+2); Public docs (+2); \ud83c\udd95 New opportunity for Composio"
+    },
+    {
+      "app": "NotebookLM",
+      "category": "AI, Research and Media-native",
+      "score": 9,
+      "level": "High",
+      "rationale": "Self-serve access (+3); API Key auth (+2); REST API (+2); Public docs (+2); \ud83c\udd95 New opportunity for Composio"
+    },
+    {
+      "app": "DealCloud",
+      "category": "CRM and Sales",
+      "score": 8,
+      "level": "High",
+      "rationale": "Self-serve access (+3); REST API (+2); Public docs (+2); MCP available (+1); \ud83c\udd95 New opportunity for Composio"
+    },
+    {
+      "app": "Help Scout",
+      "category": "Support and Helpdesk",
+      "score": 7,
+      "level": "High",
+      "rationale": "Self-serve access (+3); REST API (+2); Public docs (+2); \ud83c\udd95 New opportunity for Composio"
+    },
+    {
+      "app": "Gladly",
+      "category": "Support and Helpdesk",
+      "score": 7,
+      "level": "High",
+      "rationale": "Self-serve access (+3); REST API (+2); Public docs (+2); \ud83c\udd95 New opportunity for Composio"
+    }
+  ],
+  "pct_self_serve": 60.0,
+  "pct_gated": 9.0,
+  "dominant_auth": "Unknown",
+  "pct_mcp_available": 39.0,
+  "avg_confidence": 0.709,
+  "most_promising_category": "Productivity and Project Management",
+  "accuracy_before_verification": 0.0,
+  "accuracy_after_verification": 0.0,
+  "total_corrections": 0,
+  "lessons_learned": []
+}

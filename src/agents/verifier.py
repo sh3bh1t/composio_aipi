@@ -6,11 +6,12 @@ different model to independently assess the primary classification.
 
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 import time
 
-from groq import Groq
+from groq import AsyncGroq, RateLimitError
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 
 from src.config import settings
@@ -26,11 +27,11 @@ from src.agents.prompts import VERIFICATION_SYSTEM_PROMPT, build_verification_pr
 logger = logging.getLogger(__name__)
 
 
-def _get_groq_client() -> Groq:
+def _get_groq_client() -> AsyncGroq:
     """Create a Groq client instance."""
     if not settings.groq_api_key:
         raise ValueError("GROQ_API_KEY not set.")
-    return Groq(api_key=settings.groq_api_key)
+    return AsyncGroq(api_key=settings.groq_api_key, max_retries=2)
 
 
 @retry(
@@ -45,25 +46,34 @@ def _get_groq_client() -> Groq:
         f"Verify retry {retry_state.attempt_number}/{settings.max_retries}"
     ),
 )
-def _call_verification(client: Groq, user_prompt: str) -> str:
+async def _call_verification(client: AsyncGroq, user_prompt: str) -> str:
     """Make the verification API call."""
-    response = client.chat.completions.create(
-        model=settings.verification_model,
-        messages=[
-            {"role": "system", "content": VERIFICATION_SYSTEM_PROMPT},
-            {"role": "user", "content": user_prompt},
-        ],
-        temperature=settings.verification_temperature,
-        max_tokens=settings.max_tokens,
-        response_format={"type": "json_object"},
-    )
-    return response.choices[0].message.content or ""
+    try:
+        response = await client.chat.completions.create(
+            model=settings.verification_model,
+            messages=[
+                {"role": "system", "content": VERIFICATION_SYSTEM_PROMPT},
+                {"role": "user", "content": user_prompt},
+            ],
+            temperature=settings.verification_temperature,
+            max_tokens=settings.max_tokens,
+            response_format={"type": "json_object"},
+        )
+        return response.choices[0].message.content or ""
+    except RateLimitError as e:
+        retry_after = e.response.headers.get("retry-after")
+        if retry_after:
+            delay = float(retry_after)
+            logger.warning(f"Rate limited on Verifier. Sleeping for {delay}s based on header...")
+            await asyncio.sleep(delay)
+        raise e
 
 
-def verify_app(
+async def verify_app(
     bundle: EvidenceBundle,
     classification: ResearchResult,
-    client: Groq | None = None,
+    client: AsyncGroq | None = None,
+    semaphore: asyncio.Semaphore | None = None,
 ) -> VerificationResult:
     """Verify a single app's classification using the verification model."""
     if client is None:
@@ -71,7 +81,6 @@ def verify_app(
 
     evidence_text = bundle_to_llm_prompt(bundle)
 
-    # Build the classification summary for the verifier
     classification_summary = json.dumps({
         "auth_method": classification.auth_method.value,
         "access_model": classification.access_model.value,
@@ -84,113 +93,117 @@ def verify_app(
 
     user_prompt = build_verification_prompt(evidence_text, classification_summary)
 
-    logger.info(f"[{bundle.app_name}] Verifying with {settings.verification_model}")
+    async def _do_work():
+        logger.info(f"[{bundle.app_name}] Verifying with {settings.verification_model}")
 
-    try:
-        raw_response = _call_verification(client, user_prompt)
-        parsed = json.loads(raw_response)
+        try:
+            raw_response = await _call_verification(client, user_prompt)
+            parsed = json.loads(raw_response)
 
-        field_assessments = parsed.get("field_assessments", {})
-        field_verifications: list[FieldVerification] = []
-        disagreements: list[str] = []
+            field_assessments = parsed.get("field_assessments", {})
+            field_verifications: list[FieldVerification] = []
+            disagreements: list[str] = []
 
-        # Map of field names to primary values
-        primary_values = {
-            "auth_method": classification.auth_method.value,
-            "access_model": classification.access_model.value,
-            "api_type": classification.api_type.value,
-            "has_mcp": str(classification.has_mcp),
-            "build_verdict": classification.build_verdict.value,
-            "main_blocker": classification.main_blocker,
-        }
+            primary_values = {
+                "auth_method": classification.auth_method.value,
+                "access_model": classification.access_model.value,
+                "api_type": classification.api_type.value,
+                "has_mcp": str(classification.has_mcp),
+                "build_verdict": classification.build_verdict.value,
+                "main_blocker": classification.main_blocker,
+            }
 
-        for field_name, primary_value in primary_values.items():
-            assessment = field_assessments.get(field_name, {})
-            agrees = assessment.get("agree", True)
-            confidence = min(1.0, max(0.0, float(assessment.get("confidence", 0.5))))
-            suggested = str(assessment.get("suggested_value", primary_value))
-            reasoning = assessment.get("reasoning", "")
+            for field_name, primary_value in primary_values.items():
+                assessment = field_assessments.get(field_name, {})
+                agrees = assessment.get("agree", True)
+                confidence = min(1.0, max(0.0, float(assessment.get("confidence", 0.5))))
+                suggested = str(assessment.get("suggested_value", primary_value))
+                reasoning = assessment.get("reasoning", "")
 
-            fv = FieldVerification(
-                field_name=field_name,
-                primary_value=primary_value,
-                verified_value=suggested if not agrees else primary_value,
-                agrees=agrees,
-                confidence=confidence,
-                reasoning=reasoning,
-            )
-            field_verifications.append(fv)
-
-            if not agrees:
-                disagreements.append(
-                    f"{field_name}: primary='{primary_value}' vs verified='{suggested}'"
+                fv = FieldVerification(
+                    field_name=field_name,
+                    primary_value=primary_value,
+                    verified_value=suggested if not agrees else primary_value,
+                    agrees=agrees,
+                    confidence=confidence,
+                    reasoning=reasoning,
                 )
+                field_verifications.append(fv)
 
-        overall_confidence = min(
-            1.0,
-            max(0.0, float(parsed.get("overall_confidence", 0.5)))
-        )
+                if not agrees:
+                    disagreements.append(
+                        f"{field_name}: primary='{primary_value}' vs verified='{suggested}'"
+                    )
 
-        needs_review = (
-            overall_confidence < settings.human_audit_threshold
-            or len(disagreements) >= 3
-        )
+            overall_confidence = min(
+                1.0,
+                max(0.0, float(parsed.get("overall_confidence", 0.5)))
+            )
 
-        result = VerificationResult(
-            app_id=bundle.app_id,
-            app_name=bundle.app_name,
-            field_verifications=field_verifications,
-            overall_confidence=overall_confidence,
-            disagreements=disagreements,
-            verification_reasoning=parsed.get("overall_reasoning", ""),
-            needs_human_review=needs_review,
-        )
+            needs_review = (
+                overall_confidence < settings.human_audit_threshold
+                or len(disagreements) >= 3
+            )
 
-        status = "⚠️" if disagreements else "✓"
-        logger.info(
-            f"[{bundle.app_name}] {status} Verified: confidence={overall_confidence:.2f}, "
-            f"disagreements={len(disagreements)}, needs_review={needs_review}"
-        )
-        return result
+            result = VerificationResult(
+                app_id=bundle.app_id,
+                app_name=bundle.app_name,
+                field_verifications=field_verifications,
+                overall_confidence=overall_confidence,
+                disagreements=disagreements,
+                verification_reasoning=parsed.get("overall_reasoning", ""),
+                needs_human_review=needs_review,
+            )
 
-    except json.JSONDecodeError as e:
-        logger.error(f"[{bundle.app_name}] Verification JSON parse failed: {e}")
-        return _fallback_verification(bundle.app_id, bundle.app_name, str(e))
-    except Exception as e:
-        logger.error(f"[{bundle.app_name}] Verification failed: {e}")
-        return _fallback_verification(bundle.app_id, bundle.app_name, str(e))
+            status = "⚠️" if disagreements else "✓"
+            logger.info(
+                f"[{bundle.app_name}] {status} Verified: confidence={overall_confidence:.2f}, "
+                f"disagreements={len(disagreements)}, needs_review={needs_review}"
+            )
+            return result
+
+        except json.JSONDecodeError as e:
+            logger.error(f"[{bundle.app_name}] Verification JSON parse failed: {e}")
+            return _fallback_verification(bundle.app_id, bundle.app_name, str(e))
+        except Exception as e:
+            logger.error(f"[{bundle.app_name}] Verification failed: {e}")
+            return _fallback_verification(bundle.app_id, bundle.app_name, str(e))
+
+    if semaphore:
+        async with semaphore:
+            return await _do_work()
+    else:
+        return await _do_work()
 
 
-def verify_batch(
+async def verify_batch(
     bundles: list[EvidenceBundle],
     classifications: list[ResearchResult],
-    client: Groq | None = None,
+    client: AsyncGroq | None = None,
 ) -> list[VerificationResult]:
-    """Verify a batch of classifications with rate limiting."""
+    """Verify a batch of classifications asynchronously with strict concurrency limits."""
     if client is None:
         client = _get_groq_client()
 
-    # Build lookup by app_id
     class_by_id = {c.app_id: c for c in classifications}
-    results: list[VerificationResult] = []
-
-    for i, bundle in enumerate(bundles):
+    
+    # Qwen has 60 RPM limit, so concurrency of 5 is safe
+    semaphore = asyncio.Semaphore(5)
+    
+    tasks = []
+    for bundle in bundles:
         classification = class_by_id.get(bundle.app_id)
         if not classification:
             logger.warning(f"No classification found for app {bundle.app_name}")
-            results.append(
-                _fallback_verification(bundle.app_id, bundle.app_name, "No classification")
-            )
+            # Use asyncio.sleep(0) to wrap synchronous fallback into an awaitable task easily
+            async def _fake_task(app_id, app_name):
+                return _fallback_verification(app_id, app_name, "No classification")
+            tasks.append(_fake_task(bundle.app_id, bundle.app_name))
             continue
-
-        logger.info(f"Verifying [{i + 1}/{len(bundles)}] {bundle.app_name}")
-        result = verify_app(bundle, classification, client)
-        results.append(result)
-
-        if i < len(bundles) - 1:
-            time.sleep(settings.request_delay_seconds)
-
-    return results
+            
+        tasks.append(verify_app(bundle, classification, client, semaphore))
+        
+    return await asyncio.gather(*tasks)
 
 
 def resolve_disagreements(

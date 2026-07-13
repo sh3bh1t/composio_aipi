@@ -11,7 +11,11 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import sys
 from pathlib import Path
+
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
 
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn
@@ -182,11 +186,8 @@ def run_classification(
     console.print(
         f"[yellow]Classifying {len(bundles)} apps with {settings.primary_model}...[/]"
     )
-    console.print(
-        f"[dim]Estimated time: ~{len(bundles) * settings.request_delay_seconds / 60:.1f} minutes[/]"
-    )
 
-    results = classify_batch(bundles)
+    results = asyncio.run(classify_batch(bundles))
 
     save_checkpoint(results, settings.classification_results_file)
     return results
@@ -211,7 +212,7 @@ def run_verification(
         f"[yellow]Verifying {len(bundles)} apps with {settings.verification_model}...[/]"
     )
 
-    results = verify_batch(bundles, classifications)
+    results = asyncio.run(verify_batch(bundles, classifications))
 
     save_checkpoint(results, settings.verification_results_file)
     return results
@@ -376,9 +377,15 @@ def run_full_pipeline(resume: bool = False) -> list[FinalAppRecord]:
 
     # Stage 6: Composio opportunity scoring
     console.rule("[bold blue]Stage 6: Opportunity Scoring")
+    from src.insights.composio_checker import check_composio_toolkits
     from src.insights.composio_scoring import score_all_apps
+    
+    app_names = [app["name"] for app in apps]
+    toolkits = asyncio.run(check_composio_toolkits(app_names))
+    
     opportunity_scores = score_all_apps(
         _build_temp_records(apps, classifications),
+        composio_toolkits=toolkits,
     )
 
     # Stage 7: Build final dataset
@@ -441,3 +448,6 @@ def _build_temp_records(
                 category=app.get("category_name", ""),
             ))
     return records
+
+if __name__ == "__main__":
+    run_full_pipeline(resume=True)
