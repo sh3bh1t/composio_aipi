@@ -57,6 +57,12 @@ Powered by `qwen/qwen3-32b`, the Verifier Agent acts as the auditor. It receives
 ### 3. Confidence & Resolution Matrix
 If the Primary and Secondary agents agree, the confidence is set to high. If they disagree, a resolution matrix falls back to deterministic extraction or flags the application for Human-in-the-Loop (HITL) review.
 
+### 4. Three-Step Grading System
+Accuracy is explicitly measured and tracked across three distinct passes:
+1. **First-Pass LLM (GPT-OSS 120B):** The initial classification accuracy.
+2. **Second-Pass LLM (Qwen 3 32B):** Accuracy post-verification and confidence resolution.
+3. **Final Audited Accuracy (Human):** The absolute ground-truth accuracy after manual human review.
+
 ```mermaid
 sequenceDiagram
     participant P as Pipeline
@@ -116,7 +122,7 @@ The pipeline employs an advanced concurrency strategy designed to maximize throu
 
 ## 🚀 Execution
 
-The pipeline is completely cross-platform. Ensure your virtual environment is activated and you have set your API keys (`GROQ_API_KEY`, `FIRECRAWL_API_KEY`) in a `.env` file.
+The pipeline is completely cross-platform. Ensure your virtual environment is activated and you have set your API keys (`GROQ_API_KEY`) in a `.env` file. (Note: Firecrawl is no longer required as the pipeline uses Trafilatura).
 
 ### Windows (PowerShell)
 
@@ -130,8 +136,11 @@ python run.py --stage all --resume
 # Run a specific stage
 python run.py --stage classify
 
-# Generate mock audit and immediately regenerate HTML report
-python temp_scripts/mock_audit.py
+# Generate Human-in-the-Loop audit worksheet (samples 30 apps)
+python run.py --audit
+
+# Recalculate true accuracy from audit worksheet and regenerate HTML report
+python run.py --stage report
 ```
 
 ### Linux / macOS (Bash)
@@ -146,6 +155,16 @@ python3 run.py --stage all --resume
 # Run a specific stage
 python3 run.py --stage classify
 
-# Generate mock audit and immediately regenerate HTML report
-python3 temp_scripts/mock_audit.py
+# Generate Human-in-the-Loop audit worksheet (samples 30 apps)
+python run.py --audit
+
+# Recalculate true accuracy from audit worksheet and regenerate HTML report
+python run.py --stage report
 ```
+
+## 🕵️‍♂️ Manual Verification (HITL)
+
+To verify the agent's claims against ground truth:
+1. Run `python run.py --audit` to automatically sample 30 apps into `data/audit_worksheet.json`.
+2. Open `audit_worksheet.json` and manually grade the apps. For each app, enter the true values into the `human_*` fields and set the `*_correct` flags to `true` or `false` depending on whether the pipeline guessed correctly.
+3. Run `python run.py --stage report`. The system will ingest your manual corrections, calculate the true **Final Audited Accuracy**, patch the final dataset, and automatically reflect the real ground-truth accuracy on the HTML dashboard!

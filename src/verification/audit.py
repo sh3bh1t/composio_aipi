@@ -83,6 +83,7 @@ def generate_audit_worksheet(
             pipeline_mcp=record.has_mcp,
             pipeline_verdict=record.build_verdict,
             pipeline_blocker=record.main_blocker,
+            pipeline_urls=record.evidence_urls,
             # Human fields left empty for manual filling
         )
         worksheets.append(worksheet)
@@ -139,11 +140,22 @@ def calculate_accuracy(audit_records: list[AuditRecord]) -> dict:
                         "human_value": str(human_val),
                     })
 
+    # Calculate dynamic Hits (top 3) and Misses (bottom 2) based on real field accuracy
+    # Only use basic fields (exclude overall)
+    field_accuracies = [(f, accuracy[f]) for f in fields]
+    # Sort by accuracy descending
+    field_accuracies.sort(key=lambda x: x[1], reverse=True)
+    
+    hits = [f"{f} ({acc*100:.1f}%)" for f, acc in field_accuracies[:3]]
+    misses = [f"{f} ({acc*100:.1f}%)" for f, acc in field_accuracies[-2:]]
+
     return {
         "total_audited": total,
         "per_field_accuracy": accuracy,
         "total_corrections": len(corrections),
         "corrections": corrections,
+        "dynamic_hits": hits,
+        "dynamic_misses": misses,
     }
 
 

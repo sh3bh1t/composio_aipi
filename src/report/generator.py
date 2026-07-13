@@ -240,8 +240,13 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
                 <div class="text-4xl font-semibold stat-value text-brand-400">{{ insights.pct_mcp_available }}%</div>
             </div>
             <div class="glass-card p-6 flex flex-col gap-2">
-                <div class="text-gray-400 text-sm flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i> Audit Accuracy</div>
-                <div class="text-4xl font-semibold stat-value text-yellow-400">{{ insights.final_audit_accuracy }}%</div>
+                <div class="text-gray-400 text-sm flex items-center gap-2">
+                    <i data-lucide="{% if insights.final_audit_accuracy > 0 %}check-circle{% else %}brain-circuit{% endif %}" class="w-4 h-4"></i> 
+                    {% if insights.final_audit_accuracy > 0 %}Audit Accuracy{% else %}LLM Accuracy{% endif %}
+                </div>
+                <div class="text-4xl font-semibold stat-value text-yellow-400">
+                    {% if insights.final_audit_accuracy > 0 %}{{ insights.final_audit_accuracy }}%{% else %}{{ insights.second_pass_accuracy }}%{% endif %}
+                </div>
             </div>
         </section>
 
@@ -419,7 +424,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
                         <li class="flex gap-3 items-start"><i data-lucide="brain-circuit" class="w-4 h-4 text-brand-400 shrink-0 mt-0.5"></i> <span><strong>Primary Classifier (GPT-OSS 120B):</strong> Reads minimized DOM elements and classifies the auth method, API surface, and buildability.</span></li>
                         <li class="flex gap-3 items-start"><i data-lucide="scale" class="w-4 h-4 text-brand-400 shrink-0 mt-0.5"></i> <span><strong>Secondary Verifier (Qwen 3 32B):</strong> Acts as a discriminator. It receives the same data and the Classifier's output, assigning confidence scores and flagging hallucinations.</span></li>
                     </ul>
-                    <a href="architecture.png" target="_blank" class="text-brand-400 hover:underline inline-flex items-center gap-1 mt-4 text-sm font-medium">
+                    <a href="https://github.com/sh3bh1t/composio_aipi/blob/main/README.md" target="_blank" class="text-brand-400 hover:underline inline-flex items-center gap-1 mt-4 text-sm font-medium">
                         Click here for the complete architecture diagram <i data-lucide="external-link" class="w-4 h-4"></i>
                     </a>
                 </div>
@@ -430,22 +435,53 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
                         <i data-lucide="check-square" class="w-5 h-5 text-yellow-400"></i> Verification & Accuracy Audit
                     </h3>
                     <p class="text-sm text-gray-400 leading-relaxed">
-                        Accuracy is what matters most. We ran a strict human-in-the-loop (HITL) audit across a sample set of 30 apps to verify our agent's claims.
+                        Accuracy is what matters most. We ran a strict human-in-the-loop (HITL) audit across a sample set of 30 apps (3 per category) to verify our agent's claims.
                     </p>
+                    <ol class="text-xs text-gray-400 space-y-2 list-decimal list-inside ml-1">
+                        <li><strong>Generate Sample:</strong> Automatically sampled 30 apps into an <code class="bg-surface2 px-1 py-0.5 rounded text-brand-400">audit_worksheet.json</code>.</li>
+                        <li><strong>Manual Grading:</strong> A human researcher manually verified the API docs for all 30 apps, recording the ground truth alongside the pipeline's guesses.</li>
+                        <li><strong>Recalculate & Apply:</strong> The system ingested the human corrections, calculated true accuracy, and patched the final dataset to reflect reality.</li>
+                    </ol>
                     <div class="space-y-4 pt-2">
                         <div class="bg-surface2/50 p-4 rounded-lg space-y-1 border border-border">
                             <div class="flex justify-between items-center text-sm">
-                                <span class="text-gray-300">First-Pass LLM Accuracy:</span>
+                                <span class="text-gray-300">1. First-Pass LLM (GPT-OSS 120B):</span>
                                 <span class="text-white font-mono">{{ insights.first_pass_accuracy }}%</span>
                             </div>
                             <div class="flex justify-between items-center text-sm">
-                                <span class="text-brand-400 font-medium">Final Audited Accuracy:</span>
+                                <span class="text-gray-300">2. Second-Pass LLM (Qwen 3 32B):</span>
+                                <span class="text-white font-mono">{{ insights.second_pass_accuracy }}%</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm pt-2 mt-2 border-t border-border">
+                                <span class="text-brand-400 font-medium">3. Final Audited Accuracy (Human):</span>
                                 <span class="text-green-400 font-mono font-bold">{{ insights.final_audit_accuracy }}%</span>
                             </div>
                         </div>
-                        <p class="text-xs text-gray-400 leading-relaxed">
-                            <strong>Hits & Misses:</strong> The agent was incredibly accurate at deducing Auth patterns and identifying standard REST surfaces. However, it struggled with <strong>MCP detection</strong> (hallucinating "Yes" when seeing community repos rather than official support), which required human conflict-resolution. Where apps defeated the agent (e.g. heavily gated banking APIs), it correctly flagged them as "Unknown/Not Feasible" rather than guessing.
-                        </p>
+                        <div class="text-xs text-gray-400 leading-relaxed mt-4 bg-surface2/30 p-4 rounded-lg border border-border/50">
+                            {% if insights.dynamic_hits %}
+                            <div class="mb-3">
+                                <strong class="text-green-400 flex items-center gap-1 mb-1"><i data-lucide="trending-up" class="w-3 h-3"></i> Top Hits</strong>
+                                <ul class="list-disc list-inside space-y-1 ml-1">
+                                    {% for hit in insights.dynamic_hits %}
+                                    <li>{{ hit }} - The agent excelled at extracting this field.</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            {% endif %}
+                            
+                            {% if insights.dynamic_misses %}
+                            <div>
+                                <strong class="text-red-400 flex items-center gap-1 mb-1"><i data-lucide="trending-down" class="w-3 h-3"></i> Top Misses</strong>
+                                <ul class="list-disc list-inside space-y-1 ml-1">
+                                    {% for miss in insights.dynamic_misses %}
+                                    <li>{{ miss }} - The agent struggled or hallucinated on this field.</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            {% else %}
+                            <p class="text-gray-500 italic mt-2">Generate and apply the human audit worksheet to calculate real hits and misses.</p>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>

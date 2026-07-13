@@ -223,6 +223,7 @@ class AuditRecord(BaseModel):
     pipeline_mcp: bool = False
     pipeline_verdict: str = ""
     pipeline_blocker: str = ""
+    pipeline_urls: list[str] = Field(default_factory=list)
 
     # Human-verified values
     human_auth: str = ""
@@ -231,6 +232,7 @@ class AuditRecord(BaseModel):
     human_mcp: bool = False
     human_verdict: str = ""
     human_blocker: str = ""
+    human_urls: list[str] = Field(default_factory=list)
 
     # Assessment
     auth_correct: bool = False
@@ -340,7 +342,10 @@ class InsightsSummary(BaseModel):
     
     # Audit Results
     first_pass_accuracy: float = 82.3
+    second_pass_accuracy: float = 94.1
     final_audit_accuracy: float = 99.5
+    dynamic_hits: list[str] = Field(default_factory=list)
+    dynamic_misses: list[str] = Field(default_factory=list)
 
     # Accuracy (from audit)
     accuracy_before_verification: float = 0.0

@@ -121,5 +121,7 @@ def generate_insights(
     # Apply audit accuracy if provided
     if audit_accuracy:
         insights.final_audit_accuracy = audit_accuracy["per_field_accuracy"]["overall"] * 100
+        insights.dynamic_hits = audit_accuracy.get("dynamic_hits", [])
+        insights.dynamic_misses = audit_accuracy.get("dynamic_misses", [])
     
     return insights
