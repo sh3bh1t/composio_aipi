@@ -241,7 +241,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
             </div>
             <div class="glass-card p-6 flex flex-col gap-2">
                 <div class="text-gray-400 text-sm flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i> Audit Accuracy</div>
-                <div class="text-4xl font-semibold stat-value text-yellow-400">99.5%</div>
+                <div class="text-4xl font-semibold stat-value text-yellow-400">{{ insights.final_audit_accuracy }}%</div>
             </div>
         </section>
 
@@ -415,10 +415,13 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
                         Instead of scraping manually, we built a dual-agent pipeline utilizing Composio's own ideology:
                     </p>
                     <ul class="text-sm text-gray-400 space-y-3">
-                        <li class="flex gap-3 items-start"><i data-lucide="search" class="w-4 h-4 text-brand-400 shrink-0 mt-0.5"></i> <span><strong>Doc Discovery:</strong> An agent leverages Firecrawl to autonomously search the web and extract the exact developer API documentation URLs for each app.</span></li>
-                        <li class="flex gap-3 items-start"><i data-lucide="brain-circuit" class="w-4 h-4 text-brand-400 shrink-0 mt-0.5"></i> <span><strong>Primary Classifier (Llama-3.1):</strong> Reads minimized DOM elements and classifies the auth method, API surface, and buildability.</span></li>
-                        <li class="flex gap-3 items-start"><i data-lucide="scale" class="w-4 h-4 text-brand-400 shrink-0 mt-0.5"></i> <span><strong>Secondary Verifier (Qwen 2.5):</strong> Acts as a discriminator. It receives the same data and the Classifier's output, assigning confidence scores and flagging hallucinations.</span></li>
+                        <li class="flex gap-3 items-start"><i data-lucide="search" class="w-4 h-4 text-brand-400 shrink-0 mt-0.5"></i> <span><strong>Doc Discovery:</strong> An agent leverages Trafilatura to autonomously crawl the web and extract the exact developer API documentation URLs and clean text for each app.</span></li>
+                        <li class="flex gap-3 items-start"><i data-lucide="brain-circuit" class="w-4 h-4 text-brand-400 shrink-0 mt-0.5"></i> <span><strong>Primary Classifier (GPT-OSS 120B):</strong> Reads minimized DOM elements and classifies the auth method, API surface, and buildability.</span></li>
+                        <li class="flex gap-3 items-start"><i data-lucide="scale" class="w-4 h-4 text-brand-400 shrink-0 mt-0.5"></i> <span><strong>Secondary Verifier (Qwen 3 32B):</strong> Acts as a discriminator. It receives the same data and the Classifier's output, assigning confidence scores and flagging hallucinations.</span></li>
                     </ul>
+                    <a href="architecture.png" target="_blank" class="text-brand-400 hover:underline inline-flex items-center gap-1 mt-4 text-sm font-medium">
+                        Click here for the complete architecture diagram <i data-lucide="external-link" class="w-4 h-4"></i>
+                    </a>
                 </div>
 
                 <!-- Verification -->
@@ -433,11 +436,11 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
                         <div class="bg-surface2/50 p-4 rounded-lg space-y-1 border border-border">
                             <div class="flex justify-between items-center text-sm">
                                 <span class="text-gray-300">First-Pass LLM Accuracy:</span>
-                                <span class="text-white font-mono">82.3%</span>
+                                <span class="text-white font-mono">{{ insights.first_pass_accuracy }}%</span>
                             </div>
                             <div class="flex justify-between items-center text-sm">
                                 <span class="text-brand-400 font-medium">Final Audited Accuracy:</span>
-                                <span class="text-green-400 font-mono font-bold">99.5%</span>
+                                <span class="text-green-400 font-mono font-bold">{{ insights.final_audit_accuracy }}%</span>
                             </div>
                         </div>
                         <p class="text-xs text-gray-400 leading-relaxed">

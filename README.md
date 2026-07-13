@@ -4,7 +4,7 @@ An automated, agentic research pipeline that evaluates 100 applications for Comp
 
 ## 🚀 Architecture Deep Dive
 
-The pipeline is structured as a robust multi-stage DAG (Directed Acyclic Graph). It processes applications concurrently, caches intermediate states, and utilizes strict rate-limiting for interacting with LLM providers (Groq) and Web Search providers (Firecrawl).
+The pipeline is structured as a robust multi-stage DAG (Directed Acyclic Graph). It processes applications concurrently, caches intermediate states, and utilizes strict rate-limiting for interacting with LLM providers (Groq) and Web Crawlers (Trafilatura).
 
 ### System Workflow
 
@@ -19,12 +19,12 @@ graph TD
         D --> |Search & URL Extraction| E(Evidence Builder)
         E --> |Keyword Match & DOM Parse| CL(Primary Classifier Agent)
         
-        CL -.-> |Async Processing| LLM1[Primary LLM - Llama 3.1]
+        CL -.-> |Async Processing| LLM1[Primary LLM - GPT-OSS 120B]
         LLM1 -.-> |JSON Output| CL
         
         CL --> |Research Result| V(Secondary Verifier Agent)
         
-        V -.-> |Async Processing| LLM2[Secondary LLM - Qwen]
+        V -.-> |Async Processing| LLM2[Secondary LLM - Qwen 3 32B]
         LLM2 -.-> |Cross-Check JSON| V
         
         V --> |Conflict Resolution| CS(Confidence Scorer)
@@ -49,10 +49,10 @@ graph TD
 ## 🧠 Core Agent Systems
 
 ### 1. The Classifier (Primary Agent)
-Powered by `Llama-3.1-70b-versatile`, the Classifier Agent acts as the primary researcher. It is fed an `EvidenceBundle` containing deterministic keyword matches and a heavily minimized DOM string. It extracts the Auth Method, Access Model, API Architecture, and MCP Availability.
+Powered by `openai/gpt-oss-120b`, the Classifier Agent acts as the primary researcher. It is fed an `EvidenceBundle` containing deterministic keyword matches and a heavily minimized DOM string. It extracts the Auth Method, Access Model, API Architecture, and MCP Availability.
 
 ### 2. The Verifier (Secondary Agent)
-Powered by `qwen-2.5-32b`, the Verifier Agent acts as the auditor. It receives the same `EvidenceBundle` *and* the Classifier's output. It evaluates the classification and acts as a discriminator, assigning a confidence score to each field and flagging disagreements.
+Powered by `qwen/qwen3-32b`, the Verifier Agent acts as the auditor. It receives the same `EvidenceBundle` *and* the Classifier's output. It evaluates the classification and acts as a discriminator, assigning a confidence score to each field and flagging disagreements.
 
 ### 3. Confidence & Resolution Matrix
 If the Primary and Secondary agents agree, the confidence is set to high. If they disagree, a resolution matrix falls back to deterministic extraction or flags the application for Human-in-the-Loop (HITL) review.

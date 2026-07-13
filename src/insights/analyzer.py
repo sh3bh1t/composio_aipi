@@ -118,4 +118,8 @@ def generate_insights(
                 for field, count in field_errors.most_common(3)
             ]
 
+    # Apply audit accuracy if provided
+    if audit_accuracy:
+        insights.final_audit_accuracy = audit_accuracy["per_field_accuracy"]["overall"] * 100
+    
     return insights

@@ -152,12 +152,31 @@ def _run_report_only() -> None:
     with open(final_path, "r", encoding="utf-8") as f:
         records = [FinalAppRecord(**r) for r in json.load(f)]
 
+    # Check for manual audit worksheet
+    audit_path = settings.get_data_path(settings.audit_worksheet_file)
+    audit_accuracy = None
+    if audit_path.exists():
+        console.print("[yellow]Found manual audit worksheet. Applying corrections...[/]")
+        from src.models import AuditRecord
+        from src.verification.audit import calculate_accuracy, apply_audit_corrections
+        
+        with open(audit_path, "r", encoding="utf-8") as f:
+            audit_records = [AuditRecord(**r) for r in json.load(f)]
+            
+        audit_accuracy = calculate_accuracy(audit_records)
+        records = apply_audit_corrections(records, audit_records)
+        
+        # Save the applied corrections back to the final dataset
+        with open(final_path, "w", encoding="utf-8") as f:
+            json.dump([r.model_dump() for r in records], f, indent=2, default=str)
+        console.print(f"  [green]Overall Human Audit Accuracy: {audit_accuracy['per_field_accuracy']['overall'] * 100:.1f}%[/]")
+
     # Re-score opportunities
     from src.insights.composio_scoring import score_all_apps
     opp_scores = score_all_apps(records)
 
     # Generate insights
-    insights = generate_insights(records, opp_scores)
+    insights = generate_insights(records, opp_scores, audit_accuracy)
 
     # Generate HTML
     from src.report.generator import generate_html_report
