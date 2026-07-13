@@ -241,8 +241,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
             </div>
             <div class="glass-card p-6 flex flex-col gap-2">
                 <div class="text-gray-400 text-sm flex items-center gap-2">
-                    <i data-lucide="{% if insights.final_audit_accuracy > 0 %}check-circle{% else %}brain-circuit{% endif %}" class="w-4 h-4"></i> 
-                    {% if insights.final_audit_accuracy > 0 %}Audit Accuracy{% else %}LLM Accuracy{% endif %}
+                    <i data-lucide="check-circle" class="w-4 h-4"></i> 
+                    Audit Accuracy
                 </div>
                 <div class="text-4xl font-semibold stat-value text-yellow-400">
                     {% if insights.final_audit_accuracy > 0 %}{{ insights.final_audit_accuracy }}%{% else %}{{ insights.second_pass_accuracy }}%{% endif %}

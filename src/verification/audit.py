@@ -146,8 +146,8 @@ def calculate_accuracy(audit_records: list[AuditRecord]) -> dict:
     # Sort by accuracy descending
     field_accuracies.sort(key=lambda x: x[1], reverse=True)
     
-    hits = [f"{f} ({acc*100:.1f}%)" for f, acc in field_accuracies[:3]]
-    misses = [f"{f} ({acc*100:.1f}%)" for f, acc in field_accuracies[-2:]]
+    hits = [f"{f}" for f, acc in field_accuracies[:3]]
+    misses = [f"{f}" for f, acc in field_accuracies[-2:]]
 
     return {
         "total_audited": total,
