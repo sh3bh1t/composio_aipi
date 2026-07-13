@@ -112,28 +112,23 @@ def score_all_apps(
     return scores
 
 
-def _build_rationale(score: OpportunityScore, record: FinalAppRecord) -> str:
+def _build_rationale(score: OpportunityScore, record: FinalAppRecord) -> list[dict]:
     """Build a human-readable rationale for the opportunity score."""
-    parts: list[str] = []
+    parts: list[dict] = []
 
     if score.self_serve_score > 0:
-        parts.append(f"Self-serve access (+{score.self_serve_score})")
+        parts.append({"text": "Self-serve access", "score": score.self_serve_score, "type": "positive"})
     if score.auth_score > 0:
-        parts.append(f"{record.auth_method} auth (+{score.auth_score})")
+        parts.append({"text": f"{record.auth_method} auth", "score": score.auth_score, "type": "positive"})
     if score.api_score > 0:
-        parts.append(f"{record.api_type} API (+{score.api_score})")
+        parts.append({"text": f"{record.api_type} API", "score": score.api_score, "type": "positive"})
     if score.docs_score > 0:
-        parts.append(f"Public docs (+{score.docs_score})")
+        parts.append({"text": "Public docs", "score": score.docs_score, "type": "positive"})
     if score.mcp_score > 0:
-        parts.append(f"MCP available (+{score.mcp_score})")
+        parts.append({"text": "MCP available", "score": score.mcp_score, "type": "positive"})
     if score.gated_penalty < 0:
-        parts.append(f"Enterprise gated ({score.gated_penalty})")
+        parts.append({"text": "Enterprise gated", "score": score.gated_penalty, "type": "negative"})
     if score.no_api_penalty < 0:
-        parts.append(f"No public API ({score.no_api_penalty})")
+        parts.append({"text": "No public API", "score": score.no_api_penalty, "type": "negative"})
 
-    if score.composio_has_toolkit:
-        parts.append("⚡ Composio toolkit already exists")
-    elif score.is_new_opportunity:
-        parts.append("🆕 New opportunity for Composio")
-
-    return "; ".join(parts)
+    return parts

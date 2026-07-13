@@ -7,11 +7,11 @@ Usage:
   # Run with resume (skip completed stages)
   .\venv\Scripts\python.exe run.py --resume
 
-  # Run specific phase
-  .\venv\Scripts\python.exe run.py --phase discovery
-  .\venv\Scripts\python.exe run.py --phase classify
-  .\venv\Scripts\python.exe run.py --phase verify
-  .\venv\Scripts\python.exe run.py --phase report
+  # Run specific stage
+  .\venv\Scripts\python.exe run.py --stage discovery
+  .\venv\Scripts\python.exe run.py --stage classify
+  .\venv\Scripts\python.exe run.py --stage verify
+  .\venv\Scripts\python.exe run.py --stage report
 
   # Generate audit worksheet
   .\venv\Scripts\python.exe run.py --audit
@@ -31,10 +31,10 @@ def main() -> None:
         description="Composio AI Product Ops Research Pipeline"
     )
     parser.add_argument(
-        "--phase",
-        choices=["all", "discovery", "extract", "classify", "verify", "insights", "report"],
+        "--stage",
+        choices=["all", "discovery", "extract", "classify", "verify", "report", "insights"],
         default="all",
-        help="Run a specific pipeline phase (default: all)",
+        help="Run a specific pipeline stage (default: all)",
     )
     parser.add_argument(
         "--resume",
@@ -52,15 +52,15 @@ def main() -> None:
     try:
         if args.audit:
             _run_audit()
-        elif args.phase == "all":
+        elif args.stage == "all":
             from src.pipeline import run_full_pipeline
             run_full_pipeline(resume=args.resume)
-        elif args.phase == "discovery":
+        elif args.stage == "discovery":
             from src.pipeline import load_app_seeds, run_discovery, setup_logging
             setup_logging()
             apps, _ = load_app_seeds()
             run_discovery(apps, resume=args.resume)
-        elif args.phase == "extract":
+        elif args.stage == "extract":
             from src.pipeline import (
                 load_app_seeds, run_discovery, run_extraction, setup_logging
             )
@@ -68,7 +68,7 @@ def main() -> None:
             apps, _ = load_app_seeds()
             discoveries = run_discovery(apps, resume=True)
             run_extraction(discoveries, apps, resume=args.resume)
-        elif args.phase == "classify":
+        elif args.stage == "classify":
             from src.pipeline import (
                 load_app_seeds, run_extraction, run_discovery,
                 run_classification, setup_logging
@@ -78,7 +78,7 @@ def main() -> None:
             discoveries = run_discovery(apps, resume=True)
             bundles = run_extraction(discoveries, apps, resume=True)
             run_classification(bundles, resume=args.resume)
-        elif args.phase == "verify":
+        elif args.stage == "verify":
             from src.pipeline import (
                 load_app_seeds, run_discovery, run_extraction,
                 run_classification, run_verification, setup_logging
@@ -89,9 +89,9 @@ def main() -> None:
             bundles = run_extraction(discoveries, apps, resume=True)
             classifications = run_classification(bundles, resume=True)
             run_verification(bundles, classifications, resume=args.resume)
-        elif args.phase == "report":
+        elif args.stage == "report":
             _run_report_only()
-        elif args.phase == "insights":
+        elif args.stage == "insights":
             _run_report_only()
 
     except KeyboardInterrupt:

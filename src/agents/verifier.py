@@ -225,6 +225,7 @@ def resolve_disagreements(
 
         # Only override if verifier is confident
         if fv.confidence >= 0.7:
+            # Lazy load to avoid circular dependency during module initialization
             if fv.field_name == "auth_method":
                 from src.agents.classifier import _parse_auth_method
                 resolved.auth_method = _parse_auth_method(fv.verified_value)

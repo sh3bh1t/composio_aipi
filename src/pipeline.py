@@ -117,6 +117,7 @@ def run_discovery(apps: list[dict], resume: bool = False) -> list[DiscoveryResul
         if cached:
             return [DiscoveryResult(**item) for item in cached]
 
+    # Lazy load to avoid circular dependency during module initialization
     from src.agents.doc_discovery import discover_all_apps
 
     results = asyncio.run(discover_all_apps(apps))
@@ -144,6 +145,7 @@ def run_extraction(
         if cached:
             return [EvidenceBundle(**item) for item in cached]
 
+    # Lazy load to avoid circular dependency during module initialization
     from src.extraction.evidence_builder import extract_evidence
 
     # Build category lookup
@@ -181,6 +183,7 @@ def run_classification(
         if cached:
             return [ResearchResult(**item) for item in cached]
 
+    # Lazy load to avoid circular dependency during module initialization
     from src.agents.classifier import classify_batch
 
     console.print(
@@ -206,6 +209,7 @@ def run_verification(
         if cached:
             return [VerificationResult(**item) for item in cached]
 
+    # Lazy load to avoid circular dependency during module initialization
     from src.agents.verifier import verify_batch
 
     console.print(
@@ -225,6 +229,7 @@ def run_confidence_scoring(
     """Stage 5: Confidence Scoring."""
     console.rule("[bold blue]Stage 5: Confidence Scoring")
 
+    # Lazy load to avoid circular dependency during module initialization
     from src.verification.confidence import compute_confidence
 
     bundle_by_id = {b.app_id: b for b in bundles}
@@ -263,6 +268,7 @@ def build_final_dataset(
     """Merge all results into the final dataset."""
     console.rule("[bold blue]Building Final Dataset")
 
+    # Lazy load to avoid circular dependency during module initialization
     from src.agents.verifier import resolve_disagreements
 
     class_by_id = {c.app_id: c for c in classifications}
@@ -377,6 +383,7 @@ def run_full_pipeline(resume: bool = False) -> list[FinalAppRecord]:
 
     # Stage 6: Composio opportunity scoring
     console.rule("[bold blue]Stage 6: Opportunity Scoring")
+    # Lazy load to avoid circular dependency during module initialization
     from src.insights.composio_checker import check_composio_toolkits
     from src.insights.composio_scoring import score_all_apps
     
@@ -395,6 +402,7 @@ def run_full_pipeline(resume: bool = False) -> list[FinalAppRecord]:
 
     # Stage 8: Generate insights
     console.rule("[bold blue]Stage 7: Generating Insights")
+    # Lazy load to avoid circular dependency during module initialization
     from src.insights.analyzer import generate_insights
     insights = generate_insights(final_records, opportunity_scores)
 
@@ -404,6 +412,7 @@ def run_full_pipeline(resume: bool = False) -> list[FinalAppRecord]:
 
     # Stage 9: Generate HTML report
     console.rule("[bold blue]Stage 8: Generating HTML Report")
+    # Lazy load to avoid circular dependency during module initialization
     from src.report.generator import generate_html_report
     html_path = generate_html_report(final_records, insights, opportunity_scores)
     console.print(f"[bold green]Report generated: {html_path}[/]")

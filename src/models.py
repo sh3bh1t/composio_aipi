@@ -270,7 +270,7 @@ class OpportunityScore(BaseModel):
     # Computed
     total_score: int = 0
     level: OpportunityLevel = OpportunityLevel.LOW
-    rationale: str = ""
+    rationale: list[dict] = Field(default_factory=list)
 
     # Composio context
     composio_has_toolkit: bool = False

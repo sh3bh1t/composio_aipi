@@ -265,8 +265,18 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
                                 Score: {{ item.score }}
                             </span>
                         </div>
-                        <div class="text-xs text-brand-400 mb-3">{{ item.category }}</div>
-                        <p class="text-sm text-gray-400 leading-relaxed">{{ item.rationale }}</p>
+                        <div class="space-y-1">
+                            {% for rat in item.rationale %}
+                            <div class="flex items-center gap-1.5 text-sm {% if rat.type == 'positive' %}text-gray-300{% else %}text-gray-500{% endif %}">
+                                {% if rat.type == 'positive' %}
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                {% else %}
+                                <i data-lucide="triangle" class="w-3 h-3 text-red-400 fill-red-400 rotate-180"></i>
+                                {% endif %}
+                                {{ rat.text }} <span class="font-mono text-xs opacity-70 ml-auto">{% if rat.type == 'positive' %}+{% endif %}{{ rat.score }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
                     </div>
                     {% endfor %}
                 </div>
@@ -289,38 +299,32 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
                     {% endfor %}
                 </div>
             </div>
-        </section>
 
-        <!-- SCORING METHODOLOGY -->
-        <section id="methodology" class="glass-card p-8 bg-gradient-to-br from-surface to-brand-900/10">
-            <div class="flex flex-col md:flex-row gap-12 items-center">
-                <div class="flex-1 space-y-4">
-                    <h2 class="text-2xl font-semibold tracking-tight flex items-center gap-3">
-                        <i data-lucide="calculator" class="text-brand-400"></i> Scoring Methodology
-                    </h2>
-                    <p class="text-gray-400 leading-relaxed">
-                        The Opportunity Score is calculated deterministically based on the LLM's classification of the application's developer ecosystem. Higher scores indicate lower friction for integration building.
+            <!-- SCORING METHODOLOGY CALLOUT -->
+            <div class="mt-8 p-6 rounded-xl border border-brand-500/20 bg-brand-500/5 flex flex-col md:flex-row gap-8 items-center justify-between">
+                <div class="flex-1 space-y-2">
+                    <h4 class="text-sm font-semibold text-brand-400 uppercase tracking-widest flex items-center gap-2">
+                        <i data-lucide="info" class="w-4 h-4"></i> Opportunity Scoring Methodology
+                    </h4>
+                    <p class="text-xs text-gray-400 leading-relaxed max-w-2xl">
+                        Scores are calculated deterministically to surface the lowest-friction integration paths.
                     </p>
-                    <div class="grid grid-cols-2 gap-4 mt-6">
-                        <div class="space-y-2">
-                            <div class="text-sm font-medium text-white flex justify-between"><span>Self-Serve Access</span><span class="text-green-400">+3</span></div>
-                            <div class="text-sm font-medium text-white flex justify-between"><span>OAuth2 / API Key</span><span class="text-green-400">+2</span></div>
-                            <div class="text-sm font-medium text-white flex justify-between"><span>OpenAPI/Docs Found</span><span class="text-green-400">+2</span></div>
-                        </div>
-                        <div class="space-y-2">
-                            <div class="text-sm font-medium text-white flex justify-between"><span>MCP Server Available</span><span class="text-green-400">+1</span></div>
-                            <div class="text-sm font-medium text-gray-500 flex justify-between"><span>Gated Access</span><span class="text-red-400">-3</span></div>
-                            <div class="text-sm font-medium text-gray-500 flex justify-between"><span>No API (CLI Only)</span><span class="text-red-400">-5</span></div>
-                        </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-2 pt-2">
+                        <div class="text-xs flex justify-between"><span class="text-gray-300">Self-Serve</span> <span class="text-green-400 font-mono">+3</span></div>
+                        <div class="text-xs flex justify-between"><span class="text-gray-300">OAuth/API Key</span> <span class="text-green-400 font-mono">+2</span></div>
+                        <div class="text-xs flex justify-between"><span class="text-gray-300">REST API</span> <span class="text-green-400 font-mono">+2</span></div>
+                        <div class="text-xs flex justify-between"><span class="text-gray-300">Public Docs</span> <span class="text-green-400 font-mono">+2</span></div>
+                        <div class="text-xs flex justify-between"><span class="text-gray-300">MCP Server</span> <span class="text-green-400 font-mono">+1</span></div>
+                        <div class="text-xs flex justify-between"><span class="text-gray-500">Gated Access</span> <span class="text-red-400 font-mono">-3</span></div>
+                        <div class="text-xs flex justify-between"><span class="text-gray-500">No API</span> <span class="text-red-400 font-mono">-5</span></div>
                     </div>
                 </div>
-                <div class="w-full md:w-1/3">
-                    <div class="p-6 rounded-lg border border-brand-500/30 bg-brand-500/5 text-center space-y-2">
-                        <div class="text-sm text-brand-400 uppercase tracking-widest font-mono">Max Possible Score</div>
-                        <div class="text-6xl font-bold stat-value text-white">8.0</div>
-                    </div>
+                <div class="flex flex-col items-center justify-center px-6 border-l border-brand-500/20">
+                    <span class="text-xs text-gray-500 font-mono uppercase">Max Score</span>
+                    <span class="text-3xl font-bold text-white stat-value">10.0</span>
                 </div>
             </div>
+
         </section>
 
         <!-- Data Visualizations -->
