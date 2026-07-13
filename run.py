@@ -166,6 +166,10 @@ def _run_report_only() -> None:
         audit_accuracy = calculate_accuracy(audit_records)
         records = apply_audit_corrections(records, audit_records)
         
+        # Learn URL patterns from human_urls for future discovery runs
+        from src.verification.url_patterns import update_patterns_from_audit
+        update_patterns_from_audit(audit_path)
+        
         # Save the applied corrections back to the final dataset
         with open(final_path, "w", encoding="utf-8") as f:
             json.dump([r.model_dump() for r in records], f, indent=2, default=str)

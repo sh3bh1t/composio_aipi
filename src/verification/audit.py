@@ -63,6 +63,8 @@ def generate_audit_worksheet(
     """Generate audit worksheet with pipeline values pre-filled.
 
     The human auditor fills in 'human_*' fields and marks correctness.
+    verdict_correct and blocker_correct are auto-calculated and omitted
+    from the worksheet to reduce manual effort.
     """
     records_by_id = {r.app_id: r for r in final_records}
     worksheets: list[AuditRecord] = []
@@ -90,9 +92,15 @@ def generate_audit_worksheet(
 
     if output_path:
         output_path.parent.mkdir(parents=True, exist_ok=True)
+        # Exclude verdict_correct and blocker_correct from the output
+        # so the human doesn't have to manually grade those fields
+        exclude_fields = {"verdict_correct", "blocker_correct"}
         with open(output_path, "w", encoding="utf-8") as f:
             json.dump(
-                [w.model_dump() for w in worksheets],
+                [
+                    {k: v for k, v in w.model_dump().items() if k not in exclude_fields}
+                    for w in worksheets
+                ],
                 f,
                 indent=2,
                 ensure_ascii=False,
@@ -102,8 +110,49 @@ def generate_audit_worksheet(
     return worksheets
 
 
+def _derive_verdict_and_blocker(
+    auth: str, access: str, api_type: str, has_mcp: bool
+) -> tuple[str, str]:
+    """Deterministically derive a verdict and blocker from the effective field values.
+
+    Returns (verdict, blocker).
+    """
+    auth_l = auth.strip().lower() if auth else "unknown"
+    access_l = access.strip().lower() if access else "unknown"
+    api_l = api_type.strip().lower() if api_type else "unknown"
+
+    # No API at all
+    if api_l in ("none", "cli only", "sdk only"):
+        return "Not Feasible", "No public API available"
+
+    # Unknown API type and no MCP
+    if api_l == "unknown" and not has_mcp:
+        if auth_l == "unknown" and access_l == "unknown":
+            return "Unknown", "Insufficient information to assess"
+        return "Moderate", "API type not documented"
+
+    # Gated access
+    if access_l == "gated":
+        return "Moderate", "Requires partner/enterprise approval"
+
+    # Self-serve with known auth and known API
+    if access_l in ("self-serve", "freemium", "open source") and auth_l != "unknown" and api_l != "unknown":
+        return "Easy", "None"
+
+    # Known API but unknown auth
+    if auth_l == "unknown" and api_l != "unknown":
+        return "Moderate", "Authentication method not documented or unclear"
+
+    # Fallback
+    return "Moderate", "Partial information available"
+
+
 def calculate_accuracy(audit_records: list[AuditRecord]) -> dict:
     """Calculate per-field accuracy from completed audit records.
+
+    Auto-derives verdict_correct and blocker_correct by computing
+    what the verdict/blocker SHOULD be from the corrected field values,
+    then comparing against the pipeline's original verdict/blocker.
 
     Returns accuracy metrics for each field and overall.
     """
@@ -111,6 +160,29 @@ def calculate_accuracy(audit_records: list[AuditRecord]) -> dict:
         return {"error": "No audit records to analyze"}
 
     total = len(audit_records)
+
+    # Auto-derive verdict_correct and blocker_correct
+    for r in audit_records:
+        # Determine effective (corrected) values for each core field
+        eff_auth = r.human_auth if (not r.auth_correct and r.human_auth) else r.pipeline_auth
+        eff_access = r.human_access if (not r.access_correct and r.human_access) else r.pipeline_access
+        eff_api = r.human_api_type if (not r.api_type_correct and r.human_api_type) else r.pipeline_api_type
+        eff_mcp = r.human_mcp if not r.mcp_correct else r.pipeline_mcp
+
+        # Derive what the verdict and blocker SHOULD be
+        derived_verdict, derived_blocker = _derive_verdict_and_blocker(
+            eff_auth, eff_access, eff_api, eff_mcp
+        )
+
+        # Compare derived verdict against the pipeline's verdict
+        r.verdict_correct = (
+            derived_verdict.strip().lower() == r.pipeline_verdict.strip().lower()
+        )
+        # For blocker, just check if the pipeline flagged it correctly (both None or both present)
+        pipeline_has_blocker = r.pipeline_blocker.strip().lower() not in ("none", "")
+        derived_has_blocker = derived_blocker.strip().lower() not in ("none", "")
+        r.blocker_correct = (pipeline_has_blocker == derived_has_blocker)
+
     fields = ["auth", "access", "api_type", "mcp", "verdict", "blocker"]
 
     accuracy: dict[str, float] = {}

@@ -74,7 +74,17 @@ def build_candidate_urls(hint: str) -> list[str]:
         if url not in urls:
             urls.append(url)
 
-    return urls[:8]  # Cap at 8 candidates to avoid over-fetching
+    # Append learned patterns from human audit (additive, never removed)
+    try:
+        from src.verification.url_patterns import get_additional_urls_for_domain
+        learned_urls = get_additional_urls_for_domain(base_domain)
+        for url in learned_urls:
+            if url not in urls:
+                urls.append(url)
+    except Exception:
+        pass  # Gracefully degrade if patterns file doesn't exist yet
+
+    return urls[:12]  # Cap at 12 candidates (increased from 8 to accommodate learned patterns)
 
 
 async def fetch_page(

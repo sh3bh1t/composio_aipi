@@ -71,6 +71,7 @@ class Settings(BaseSettings):
     # Audit
     audit_worksheet_file: str = "audit_worksheet.json"
     audit_results_file: str = "audit_results.json"
+    learned_url_patterns_file: str = "learned_url_patterns.json"
 
     # Final outputs
     final_dataset_json: str = "final_dataset.json"

@@ -103,7 +103,7 @@ def score_all_apps(
 
     scores: list[OpportunityScore] = []
     for record in records:
-        has_toolkit = composio_toolkits.get(record.app_name.lower(), False)
+        has_toolkit = composio_toolkits.get(record.app_name.lower(), record.composio_has_toolkit)
         score = score_opportunity(record, composio_has_toolkit=has_toolkit)
         scores.append(score)
 
