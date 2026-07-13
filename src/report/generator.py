@@ -48,7 +48,8 @@ def _prepare_template_data(
     """Prepare all data needed by the HTML template."""
     sorted_records = sorted(records, key=lambda r: r.app_id)
 
-    new_opportunities = []
+    high_opportunities = []
+    medium_opportunities = []
     existing_toolkits = []
 
     if opportunity_scores:
@@ -66,8 +67,10 @@ def _prepare_template_data(
             }
             if score.composio_has_toolkit:
                 existing_toolkits.append(item)
-            else:
-                new_opportunities.append(item)
+            elif score.level.value == 'High':
+                high_opportunities.append(item)
+            elif score.level.value == 'Medium':
+                medium_opportunities.append(item)
 
     # Chart data (JSON serialized for Chart.js)
     auth_labels = json.dumps(list(insights.auth_distribution.keys()))
@@ -92,7 +95,8 @@ def _prepare_template_data(
         "records": sorted_records,
         "records_json": json.dumps([r.model_dump() for r in sorted_records], default=str),
         "insights": insights,
-        "new_opportunities": new_opportunities,
+        "high_opportunities": high_opportunities,
+        "medium_opportunities": medium_opportunities,
         "existing_toolkits": existing_toolkits,
         "auth_labels": auth_labels,
         "auth_values": auth_values,
@@ -241,30 +245,91 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
             </div>
         </section>
 
-        <!-- OPPORTUNITY MATRIX (MOVED TO TOP) -->
+        <!-- OPPORTUNITY MATRIX -->
         <section id="opportunities" class="space-y-12">
-            <div class="space-y-2">
-                <h2 class="text-3xl font-semibold tracking-tight flex items-center gap-3">
-                    <i data-lucide="target" class="text-brand-400"></i> Opportunity Matrix
-                </h2>
-                <p class="text-gray-400">The highest ROI integrations ranked by accessibility, documentation quality, and API availability.</p>
+            <div class="space-y-4">
+                <div class="space-y-2">
+                    <h2 class="text-3xl font-semibold tracking-tight flex items-center gap-3">
+                        <i data-lucide="target" class="text-brand-400"></i> Opportunity Matrix
+                    </h2>
+                    <p class="text-gray-400">The highest ROI integrations ranked by accessibility, documentation quality, and API availability.</p>
+                </div>
+                
+                <!-- SCORING METHODOLOGY CALLOUT -->
+                <div class="p-6 rounded-xl border border-brand-500/20 bg-brand-500/5 flex flex-col md:flex-row gap-8 items-center justify-between">
+                    <div class="flex-1 space-y-2">
+                        <h4 class="text-sm font-semibold text-brand-400 uppercase tracking-widest flex items-center gap-2">
+                            <i data-lucide="info" class="w-4 h-4"></i> Opportunity Scoring Methodology
+                        </h4>
+                        <p class="text-xs text-gray-400 leading-relaxed max-w-2xl">
+                            Scores are calculated deterministically to surface the lowest-friction integration paths.
+                        </p>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-2 pt-2">
+                            <div class="text-xs flex justify-between"><span class="text-gray-300">Self-Serve</span> <span class="text-green-400 font-mono">+3</span></div>
+                            <div class="text-xs flex justify-between"><span class="text-gray-300">OAuth/API Key</span> <span class="text-green-400 font-mono">+2</span></div>
+                            <div class="text-xs flex justify-between"><span class="text-gray-300">REST API</span> <span class="text-green-400 font-mono">+2</span></div>
+                            <div class="text-xs flex justify-between"><span class="text-gray-300">Public Docs</span> <span class="text-green-400 font-mono">+2</span></div>
+                            <div class="text-xs flex justify-between"><span class="text-gray-300">MCP Server</span> <span class="text-green-400 font-mono">+1</span></div>
+                            <div class="text-xs flex justify-between"><span class="text-gray-500">Gated Access</span> <span class="text-red-400 font-mono">-3</span></div>
+                            <div class="text-xs flex justify-between"><span class="text-gray-500">No API</span> <span class="text-red-400 font-mono">-5</span></div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-center justify-center px-6 border-l border-brand-500/20">
+                        <span class="text-xs text-gray-500 font-mono uppercase">Max Score</span>
+                        <span class="text-3xl font-bold text-white stat-value">10.0</span>
+                    </div>
+                </div>
             </div>
 
-            <!-- New Opportunities -->
+            <!-- High Feasibility Opportunities -->
             <div class="space-y-6">
                 <h3 class="text-xl font-medium flex items-center gap-2 text-green-400">
-                    <i data-lucide="plus-circle" class="w-5 h-5"></i> Top New Opportunities 
-                    <span class="text-sm font-normal text-gray-500">(Not currently in Composio)</span>
+                    <i data-lucide="zap" class="w-5 h-5"></i> High Feasibility 
+                    <span class="text-sm font-normal text-gray-500">(Score >= 7)</span>
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {% for item in new_opportunities[:15] %}
-                    <div class="glass-card p-5 border-l-2 {% if item.level == 'High' %}border-l-green-500{% elif item.level == 'Medium' %}border-l-yellow-500{% else %}border-l-red-500{% endif %} hover:bg-white/5 transition cursor-default">
+                    {% for item in high_opportunities[:15] %}
+                    <div class="glass-card p-5 border-l-2 border-l-green-500 hover:bg-white/5 transition cursor-default">
                         <div class="flex justify-between items-start mb-2">
                             <h4 class="font-semibold text-lg">{{ item.name }}</h4>
-                            <span class="badge stat-value {% if item.level == 'High' %}badge-green{% elif item.level == 'Medium' %}badge-yellow{% else %}badge-red{% endif %}">
+                            <span class="badge stat-value badge-green">
                                 Score: {{ item.score }}
                             </span>
                         </div>
+                        <div class="text-xs text-brand-400 mb-3">{{ item.category }}</div>
+                        <div class="space-y-1">
+                            {% for rat in item.rationale %}
+                            <div class="flex items-center gap-1.5 text-sm {% if rat.type == 'positive' %}text-gray-300{% else %}text-gray-500{% endif %}">
+                                {% if rat.type == 'positive' %}
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                {% else %}
+                                <i data-lucide="triangle" class="w-3 h-3 text-red-400 fill-red-400 rotate-180"></i>
+                                {% endif %}
+                                {{ rat.text }} <span class="font-mono text-xs opacity-70 ml-auto">{% if rat.type == 'positive' %}+{% endif %}{{ rat.score }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Medium Feasibility Opportunities -->
+            <div class="space-y-6 pt-8 border-t border-border">
+                <h3 class="text-xl font-medium flex items-center gap-2 text-yellow-400">
+                    <i data-lucide="activity" class="w-5 h-5"></i> Medium Feasibility 
+                    <span class="text-sm font-normal text-gray-500">(Score >= 3)</span>
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {% for item in medium_opportunities[:12] %}
+                    <div class="glass-card p-5 border-l-2 border-l-yellow-500 hover:bg-white/5 transition cursor-default">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-semibold text-lg">{{ item.name }}</h4>
+                            <span class="badge stat-value badge-yellow">
+                                Score: {{ item.score }}
+                            </span>
+                        </div>
+                        <div class="text-xs text-brand-400 mb-3">{{ item.category }}</div>
                         <div class="space-y-1">
                             {% for rat in item.rationale %}
                             <div class="flex items-center gap-1.5 text-sm {% if rat.type == 'positive' %}text-gray-300{% else %}text-gray-500{% endif %}">
@@ -289,7 +354,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {% for item in existing_toolkits[:12] %}
-                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80">
+                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80 border-l-2 border-l-brand-500">
                         <div>
                             <h4 class="font-medium">{{ item.name }}</h4>
                             <div class="text-xs text-gray-500">{{ item.category }}</div>
@@ -299,32 +364,6 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
                     {% endfor %}
                 </div>
             </div>
-
-            <!-- SCORING METHODOLOGY CALLOUT -->
-            <div class="mt-8 p-6 rounded-xl border border-brand-500/20 bg-brand-500/5 flex flex-col md:flex-row gap-8 items-center justify-between">
-                <div class="flex-1 space-y-2">
-                    <h4 class="text-sm font-semibold text-brand-400 uppercase tracking-widest flex items-center gap-2">
-                        <i data-lucide="info" class="w-4 h-4"></i> Opportunity Scoring Methodology
-                    </h4>
-                    <p class="text-xs text-gray-400 leading-relaxed max-w-2xl">
-                        Scores are calculated deterministically to surface the lowest-friction integration paths.
-                    </p>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-2 pt-2">
-                        <div class="text-xs flex justify-between"><span class="text-gray-300">Self-Serve</span> <span class="text-green-400 font-mono">+3</span></div>
-                        <div class="text-xs flex justify-between"><span class="text-gray-300">OAuth/API Key</span> <span class="text-green-400 font-mono">+2</span></div>
-                        <div class="text-xs flex justify-between"><span class="text-gray-300">REST API</span> <span class="text-green-400 font-mono">+2</span></div>
-                        <div class="text-xs flex justify-between"><span class="text-gray-300">Public Docs</span> <span class="text-green-400 font-mono">+2</span></div>
-                        <div class="text-xs flex justify-between"><span class="text-gray-300">MCP Server</span> <span class="text-green-400 font-mono">+1</span></div>
-                        <div class="text-xs flex justify-between"><span class="text-gray-500">Gated Access</span> <span class="text-red-400 font-mono">-3</span></div>
-                        <div class="text-xs flex justify-between"><span class="text-gray-500">No API</span> <span class="text-red-400 font-mono">-5</span></div>
-                    </div>
-                </div>
-                <div class="flex flex-col items-center justify-center px-6 border-l border-brand-500/20">
-                    <span class="text-xs text-gray-500 font-mono uppercase">Max Score</span>
-                    <span class="text-3xl font-bold text-white stat-value">10.0</span>
-                </div>
-            </div>
-
         </section>
 
         <!-- Data Visualizations -->

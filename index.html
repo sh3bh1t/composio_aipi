@@ -127,20 +127,47 @@
             </div>
         </section>
 
-        <!-- OPPORTUNITY MATRIX (MOVED TO TOP) -->
+        <!-- OPPORTUNITY MATRIX -->
         <section id="opportunities" class="space-y-12">
-            <div class="space-y-2">
-                <h2 class="text-3xl font-semibold tracking-tight flex items-center gap-3">
-                    <i data-lucide="target" class="text-brand-400"></i> Opportunity Matrix
-                </h2>
-                <p class="text-gray-400">The highest ROI integrations ranked by accessibility, documentation quality, and API availability.</p>
+            <div class="space-y-4">
+                <div class="space-y-2">
+                    <h2 class="text-3xl font-semibold tracking-tight flex items-center gap-3">
+                        <i data-lucide="target" class="text-brand-400"></i> Opportunity Matrix
+                    </h2>
+                    <p class="text-gray-400">The highest ROI integrations ranked by accessibility, documentation quality, and API availability.</p>
+                </div>
+                
+                <!-- SCORING METHODOLOGY CALLOUT -->
+                <div class="p-6 rounded-xl border border-brand-500/20 bg-brand-500/5 flex flex-col md:flex-row gap-8 items-center justify-between">
+                    <div class="flex-1 space-y-2">
+                        <h4 class="text-sm font-semibold text-brand-400 uppercase tracking-widest flex items-center gap-2">
+                            <i data-lucide="info" class="w-4 h-4"></i> Opportunity Scoring Methodology
+                        </h4>
+                        <p class="text-xs text-gray-400 leading-relaxed max-w-2xl">
+                            Scores are calculated deterministically to surface the lowest-friction integration paths.
+                        </p>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-2 pt-2">
+                            <div class="text-xs flex justify-between"><span class="text-gray-300">Self-Serve</span> <span class="text-green-400 font-mono">+3</span></div>
+                            <div class="text-xs flex justify-between"><span class="text-gray-300">OAuth/API Key</span> <span class="text-green-400 font-mono">+2</span></div>
+                            <div class="text-xs flex justify-between"><span class="text-gray-300">REST API</span> <span class="text-green-400 font-mono">+2</span></div>
+                            <div class="text-xs flex justify-between"><span class="text-gray-300">Public Docs</span> <span class="text-green-400 font-mono">+2</span></div>
+                            <div class="text-xs flex justify-between"><span class="text-gray-300">MCP Server</span> <span class="text-green-400 font-mono">+1</span></div>
+                            <div class="text-xs flex justify-between"><span class="text-gray-500">Gated Access</span> <span class="text-red-400 font-mono">-3</span></div>
+                            <div class="text-xs flex justify-between"><span class="text-gray-500">No API</span> <span class="text-red-400 font-mono">-5</span></div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-center justify-center px-6 border-l border-brand-500/20">
+                        <span class="text-xs text-gray-500 font-mono uppercase">Max Score</span>
+                        <span class="text-3xl font-bold text-white stat-value">10.0</span>
+                    </div>
+                </div>
             </div>
 
-            <!-- New Opportunities -->
+            <!-- High Feasibility Opportunities -->
             <div class="space-y-6">
                 <h3 class="text-xl font-medium flex items-center gap-2 text-green-400">
-                    <i data-lucide="plus-circle" class="w-5 h-5"></i> Top New Opportunities 
-                    <span class="text-sm font-normal text-gray-500">(Not currently in Composio)</span>
+                    <i data-lucide="zap" class="w-5 h-5"></i> High Feasibility 
+                    <span class="text-sm font-normal text-gray-500">(Score >= 7)</span>
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     
@@ -151,6 +178,7 @@
                                 Score: 10
                             </span>
                         </div>
+                        <div class="text-xs text-brand-400 mb-3">Communications and Messaging</div>
                         <div class="space-y-1">
                             
                             <div class="flex items-center gap-1.5 text-sm text-gray-300">
@@ -198,6 +226,7 @@
                                 Score: 10
                             </span>
                         </div>
+                        <div class="text-xs text-brand-400 mb-3">Marketing, Ads, Email and Social</div>
                         <div class="space-y-1">
                             
                             <div class="flex items-center gap-1.5 text-sm text-gray-300">
@@ -245,6 +274,7 @@
                                 Score: 10
                             </span>
                         </div>
+                        <div class="text-xs text-brand-400 mb-3">Marketing, Ads, Email and Social</div>
                         <div class="space-y-1">
                             
                             <div class="flex items-center gap-1.5 text-sm text-gray-300">
@@ -292,6 +322,7 @@
                                 Score: 10
                             </span>
                         </div>
+                        <div class="text-xs text-brand-400 mb-3">Data, SEO and Scraping</div>
                         <div class="space-y-1">
                             
                             <div class="flex items-center gap-1.5 text-sm text-gray-300">
@@ -339,6 +370,7 @@
                                 Score: 10
                             </span>
                         </div>
+                        <div class="text-xs text-brand-400 mb-3">Productivity and Project Management</div>
                         <div class="space-y-1">
                             
                             <div class="flex items-center gap-1.5 text-sm text-gray-300">
@@ -386,6 +418,7 @@
                                 Score: 10
                             </span>
                         </div>
+                        <div class="text-xs text-brand-400 mb-3">Productivity and Project Management</div>
                         <div class="space-y-1">
                             
                             <div class="flex items-center gap-1.5 text-sm text-gray-300">
@@ -433,6 +466,7 @@
                                 Score: 10
                             </span>
                         </div>
+                        <div class="text-xs text-brand-400 mb-3">AI, Research and Media-native</div>
                         <div class="space-y-1">
                             
                             <div class="flex items-center gap-1.5 text-sm text-gray-300">
@@ -480,6 +514,7 @@
                                 Score: 9
                             </span>
                         </div>
+                        <div class="text-xs text-brand-400 mb-3">CRM and Sales</div>
                         <div class="space-y-1">
                             
                             <div class="flex items-center gap-1.5 text-sm text-gray-300">
@@ -520,6 +555,7 @@
                                 Score: 9
                             </span>
                         </div>
+                        <div class="text-xs text-brand-400 mb-3">Marketing, Ads, Email and Social</div>
                         <div class="space-y-1">
                             
                             <div class="flex items-center gap-1.5 text-sm text-gray-300">
@@ -560,6 +596,7 @@
                                 Score: 9
                             </span>
                         </div>
+                        <div class="text-xs text-brand-400 mb-3">Ecommerce</div>
                         <div class="space-y-1">
                             
                             <div class="flex items-center gap-1.5 text-sm text-gray-300">
@@ -600,6 +637,7 @@
                                 Score: 9
                             </span>
                         </div>
+                        <div class="text-xs text-brand-400 mb-3">Developer, Infra and Data Platforms</div>
                         <div class="space-y-1">
                             
                             <div class="flex items-center gap-1.5 text-sm text-gray-300">
@@ -640,6 +678,7 @@
                                 Score: 9
                             </span>
                         </div>
+                        <div class="text-xs text-brand-400 mb-3">AI, Research and Media-native</div>
                         <div class="space-y-1">
                             
                             <div class="flex items-center gap-1.5 text-sm text-gray-300">
@@ -680,6 +719,7 @@
                                 Score: 8
                             </span>
                         </div>
+                        <div class="text-xs text-brand-400 mb-3">CRM and Sales</div>
                         <div class="space-y-1">
                             
                             <div class="flex items-center gap-1.5 text-sm text-gray-300">
@@ -720,6 +760,7 @@
                                 Score: 7
                             </span>
                         </div>
+                        <div class="text-xs text-brand-400 mb-3">Support and Helpdesk</div>
                         <div class="space-y-1">
                             
                             <div class="flex items-center gap-1.5 text-sm text-gray-300">
@@ -753,6 +794,7 @@
                                 Score: 7
                             </span>
                         </div>
+                        <div class="text-xs text-brand-400 mb-3">Support and Helpdesk</div>
                         <div class="space-y-1">
                             
                             <div class="flex items-center gap-1.5 text-sm text-gray-300">
@@ -782,6 +824,446 @@
                 </div>
             </div>
 
+            <!-- Medium Feasibility Opportunities -->
+            <div class="space-y-6 pt-8 border-t border-border">
+                <h3 class="text-xl font-medium flex items-center gap-2 text-yellow-400">
+                    <i data-lucide="activity" class="w-5 h-5"></i> Medium Feasibility 
+                    <span class="text-sm font-normal text-gray-500">(Score >= 3)</span>
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    
+                    <div class="glass-card p-5 border-l-2 border-l-yellow-500 hover:bg-white/5 transition cursor-default">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-semibold text-lg">Pumble</h4>
+                            <span class="badge stat-value badge-yellow">
+                                Score: 6
+                            </span>
+                        </div>
+                        <div class="text-xs text-brand-400 mb-3">Communications and Messaging</div>
+                        <div class="space-y-1">
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                Self-serve access <span class="font-mono text-xs opacity-70 ml-auto">+3</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                Public docs <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                MCP available <span class="font-mono text-xs opacity-70 ml-auto">+1</span>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-5 border-l-2 border-l-yellow-500 hover:bg-white/5 transition cursor-default">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-semibold text-lg">Google Ads</h4>
+                            <span class="badge stat-value badge-yellow">
+                                Score: 6
+                            </span>
+                        </div>
+                        <div class="text-xs text-brand-400 mb-3">Marketing, Ads, Email and Social</div>
+                        <div class="space-y-1">
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                API Key auth <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                REST API <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                Public docs <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-5 border-l-2 border-l-yellow-500 hover:bg-white/5 transition cursor-default">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-semibold text-lg">Waterfall.io</h4>
+                            <span class="badge stat-value badge-yellow">
+                                Score: 6
+                            </span>
+                        </div>
+                        <div class="text-xs text-brand-400 mb-3">Data, SEO and Scraping</div>
+                        <div class="space-y-1">
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                API Key auth <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                REST API <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                Public docs <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-5 border-l-2 border-l-yellow-500 hover:bg-white/5 transition cursor-default">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-semibold text-lg">Magento (Adobe Commerce)</h4>
+                            <span class="badge stat-value badge-yellow">
+                                Score: 5
+                            </span>
+                        </div>
+                        <div class="text-xs text-brand-400 mb-3">Ecommerce</div>
+                        <div class="space-y-1">
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                Self-serve access <span class="font-mono text-xs opacity-70 ml-auto">+3</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                Public docs <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-5 border-l-2 border-l-yellow-500 hover:bg-white/5 transition cursor-default">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-semibold text-lg">Binance</h4>
+                            <span class="badge stat-value badge-yellow">
+                                Score: 5
+                            </span>
+                        </div>
+                        <div class="text-xs text-brand-400 mb-3">Finance and Fintech</div>
+                        <div class="space-y-1">
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                Self-serve access <span class="font-mono text-xs opacity-70 ml-auto">+3</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                Public docs <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-5 border-l-2 border-l-yellow-500 hover:bg-white/5 transition cursor-default">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-semibold text-lg">Zoho CRM</h4>
+                            <span class="badge stat-value badge-yellow">
+                                Score: 4
+                            </span>
+                        </div>
+                        <div class="text-xs text-brand-400 mb-3">CRM and Sales</div>
+                        <div class="space-y-1">
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                OAuth2 auth <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                REST API <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                Public docs <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                MCP available <span class="font-mono text-xs opacity-70 ml-auto">+1</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-500">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-red-400 fill-red-400 rotate-180"></i>
+                                
+                                Enterprise gated <span class="font-mono text-xs opacity-70 ml-auto">-3</span>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-5 border-l-2 border-l-yellow-500 hover:bg-white/5 transition cursor-default">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-semibold text-lg">Copper</h4>
+                            <span class="badge stat-value badge-yellow">
+                                Score: 4
+                            </span>
+                        </div>
+                        <div class="text-xs text-brand-400 mb-3">CRM and Sales</div>
+                        <div class="space-y-1">
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                REST API <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                Public docs <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-5 border-l-2 border-l-yellow-500 hover:bg-white/5 transition cursor-default">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-semibold text-lg">Zoho Cliq</h4>
+                            <span class="badge stat-value badge-yellow">
+                                Score: 4
+                            </span>
+                        </div>
+                        <div class="text-xs text-brand-400 mb-3">Communications and Messaging</div>
+                        <div class="space-y-1">
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                OAuth2 auth <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                REST API <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                Public docs <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                MCP available <span class="font-mono text-xs opacity-70 ml-auto">+1</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-500">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-red-400 fill-red-400 rotate-180"></i>
+                                
+                                Enterprise gated <span class="font-mono text-xs opacity-70 ml-auto">-3</span>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-5 border-l-2 border-l-yellow-500 hover:bg-white/5 transition cursor-default">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-semibold text-lg">LinkedIn Ads</h4>
+                            <span class="badge stat-value badge-yellow">
+                                Score: 4
+                            </span>
+                        </div>
+                        <div class="text-xs text-brand-400 mb-3">Marketing, Ads, Email and Social</div>
+                        <div class="space-y-1">
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                OAuth2 auth <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                REST API <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                Public docs <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                MCP available <span class="font-mono text-xs opacity-70 ml-auto">+1</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-500">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-red-400 fill-red-400 rotate-180"></i>
+                                
+                                Enterprise gated <span class="font-mono text-xs opacity-70 ml-auto">-3</span>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-5 border-l-2 border-l-yellow-500 hover:bg-white/5 transition cursor-default">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-semibold text-lg">Ecwid</h4>
+                            <span class="badge stat-value badge-yellow">
+                                Score: 4
+                            </span>
+                        </div>
+                        <div class="text-xs text-brand-400 mb-3">Ecommerce</div>
+                        <div class="space-y-1">
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                REST API <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                Public docs <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-5 border-l-2 border-l-yellow-500 hover:bg-white/5 transition cursor-default">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-semibold text-lg">YouTube Transcript</h4>
+                            <span class="badge stat-value badge-yellow">
+                                Score: 4
+                            </span>
+                        </div>
+                        <div class="text-xs text-brand-400 mb-3">AI, Research and Media-native</div>
+                        <div class="space-y-1">
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                API Key auth <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                REST API <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                Public docs <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                MCP available <span class="font-mono text-xs opacity-70 ml-auto">+1</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-500">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-red-400 fill-red-400 rotate-180"></i>
+                                
+                                Enterprise gated <span class="font-mono text-xs opacity-70 ml-auto">-3</span>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-5 border-l-2 border-l-yellow-500 hover:bg-white/5 transition cursor-default">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-semibold text-lg">Otter AI</h4>
+                            <span class="badge stat-value badge-yellow">
+                                Score: 3
+                            </span>
+                        </div>
+                        <div class="text-xs text-brand-400 mb-3">AI, Research and Media-native</div>
+                        <div class="space-y-1">
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                Public docs <span class="font-mono text-xs opacity-70 ml-auto">+2</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-sm text-gray-300">
+                                
+                                <i data-lucide="triangle" class="w-3 h-3 text-green-400 fill-green-400"></i>
+                                
+                                MCP available <span class="font-mono text-xs opacity-70 ml-auto">+1</span>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
             <!-- Existing Toolkits -->
             <div class="space-y-6 pt-8 border-t border-border">
                 <h3 class="text-xl font-medium flex items-center gap-2 text-brand-400">
@@ -789,7 +1271,7 @@
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     
-                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80">
+                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80 border-l-2 border-l-brand-500">
                         <div>
                             <h4 class="font-medium">HubSpot</h4>
                             <div class="text-xs text-gray-500">CRM and Sales</div>
@@ -797,7 +1279,7 @@
                         <i data-lucide="check" class="text-brand-500 w-5 h-5"></i>
                     </div>
                     
-                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80">
+                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80 border-l-2 border-l-brand-500">
                         <div>
                             <h4 class="font-medium">Pipedrive</h4>
                             <div class="text-xs text-gray-500">CRM and Sales</div>
@@ -805,7 +1287,7 @@
                         <i data-lucide="check" class="text-brand-500 w-5 h-5"></i>
                     </div>
                     
-                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80">
+                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80 border-l-2 border-l-brand-500">
                         <div>
                             <h4 class="font-medium">Close</h4>
                             <div class="text-xs text-gray-500">CRM and Sales</div>
@@ -813,7 +1295,7 @@
                         <i data-lucide="check" class="text-brand-500 w-5 h-5"></i>
                     </div>
                     
-                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80">
+                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80 border-l-2 border-l-brand-500">
                         <div>
                             <h4 class="font-medium">Zendesk</h4>
                             <div class="text-xs text-gray-500">Support and Helpdesk</div>
@@ -821,7 +1303,7 @@
                         <i data-lucide="check" class="text-brand-500 w-5 h-5"></i>
                     </div>
                     
-                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80">
+                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80 border-l-2 border-l-brand-500">
                         <div>
                             <h4 class="font-medium">Freshdesk</h4>
                             <div class="text-xs text-gray-500">Support and Helpdesk</div>
@@ -829,7 +1311,7 @@
                         <i data-lucide="check" class="text-brand-500 w-5 h-5"></i>
                     </div>
                     
-                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80">
+                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80 border-l-2 border-l-brand-500">
                         <div>
                             <h4 class="font-medium">Plain</h4>
                             <div class="text-xs text-gray-500">Support and Helpdesk</div>
@@ -837,7 +1319,7 @@
                         <i data-lucide="check" class="text-brand-500 w-5 h-5"></i>
                     </div>
                     
-                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80">
+                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80 border-l-2 border-l-brand-500">
                         <div>
                             <h4 class="font-medium">Gorgias</h4>
                             <div class="text-xs text-gray-500">Support and Helpdesk</div>
@@ -845,7 +1327,7 @@
                         <i data-lucide="check" class="text-brand-500 w-5 h-5"></i>
                     </div>
                     
-                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80">
+                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80 border-l-2 border-l-brand-500">
                         <div>
                             <h4 class="font-medium">Twilio</h4>
                             <div class="text-xs text-gray-500">Communications and Messaging</div>
@@ -853,7 +1335,7 @@
                         <i data-lucide="check" class="text-brand-500 w-5 h-5"></i>
                     </div>
                     
-                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80">
+                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80 border-l-2 border-l-brand-500">
                         <div>
                             <h4 class="font-medium">BigCommerce</h4>
                             <div class="text-xs text-gray-500">Ecommerce</div>
@@ -861,7 +1343,7 @@
                         <i data-lucide="check" class="text-brand-500 w-5 h-5"></i>
                     </div>
                     
-                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80">
+                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80 border-l-2 border-l-brand-500">
                         <div>
                             <h4 class="font-medium">Apify</h4>
                             <div class="text-xs text-gray-500">Data, SEO and Scraping</div>
@@ -869,7 +1351,7 @@
                         <i data-lucide="check" class="text-brand-500 w-5 h-5"></i>
                     </div>
                     
-                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80">
+                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80 border-l-2 border-l-brand-500">
                         <div>
                             <h4 class="font-medium">Firecrawl</h4>
                             <div class="text-xs text-gray-500">Data, SEO and Scraping</div>
@@ -877,7 +1359,7 @@
                         <i data-lucide="check" class="text-brand-500 w-5 h-5"></i>
                     </div>
                     
-                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80">
+                    <div class="glass-card p-4 hover:bg-white/5 transition flex justify-between items-center opacity-80 border-l-2 border-l-brand-500">
                         <div>
                             <h4 class="font-medium">Supabase</h4>
                             <div class="text-xs text-gray-500">Developer, Infra and Data Platforms</div>
@@ -887,32 +1369,6 @@
                     
                 </div>
             </div>
-
-            <!-- SCORING METHODOLOGY CALLOUT -->
-            <div class="mt-8 p-6 rounded-xl border border-brand-500/20 bg-brand-500/5 flex flex-col md:flex-row gap-8 items-center justify-between">
-                <div class="flex-1 space-y-2">
-                    <h4 class="text-sm font-semibold text-brand-400 uppercase tracking-widest flex items-center gap-2">
-                        <i data-lucide="info" class="w-4 h-4"></i> Opportunity Scoring Methodology
-                    </h4>
-                    <p class="text-xs text-gray-400 leading-relaxed max-w-2xl">
-                        Scores are calculated deterministically to surface the lowest-friction integration paths.
-                    </p>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-2 pt-2">
-                        <div class="text-xs flex justify-between"><span class="text-gray-300">Self-Serve</span> <span class="text-green-400 font-mono">+3</span></div>
-                        <div class="text-xs flex justify-between"><span class="text-gray-300">OAuth/API Key</span> <span class="text-green-400 font-mono">+2</span></div>
-                        <div class="text-xs flex justify-between"><span class="text-gray-300">REST API</span> <span class="text-green-400 font-mono">+2</span></div>
-                        <div class="text-xs flex justify-between"><span class="text-gray-300">Public Docs</span> <span class="text-green-400 font-mono">+2</span></div>
-                        <div class="text-xs flex justify-between"><span class="text-gray-300">MCP Server</span> <span class="text-green-400 font-mono">+1</span></div>
-                        <div class="text-xs flex justify-between"><span class="text-gray-500">Gated Access</span> <span class="text-red-400 font-mono">-3</span></div>
-                        <div class="text-xs flex justify-between"><span class="text-gray-500">No API</span> <span class="text-red-400 font-mono">-5</span></div>
-                    </div>
-                </div>
-                <div class="flex flex-col items-center justify-center px-6 border-l border-brand-500/20">
-                    <span class="text-xs text-gray-500 font-mono uppercase">Max Score</span>
-                    <span class="text-3xl font-bold text-white stat-value">10.0</span>
-                </div>
-            </div>
-
         </section>
 
         <!-- Data Visualizations -->

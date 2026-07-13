@@ -102,7 +102,6 @@ The pipeline employs an advanced concurrency strategy designed to maximize throu
 ## 📂 Project Structure
 
 ```
-├── .agent/              # Execution Runbooks & Agent Rules
 ├── data/                # Local cache directory for all pipeline stages
 ├── output/              # Final output directory (composio_research_report.html)
 ├── src/
@@ -117,4 +116,36 @@ The pipeline employs an advanced concurrency strategy designed to maximize throu
 
 ## 🚀 Execution
 
-Refer to `.agent/pipeline-execution.md` for specific instructions on how to manually run, resume, or interact with specific stages of the pipeline via the `run.py` orchestrator.
+The pipeline is completely cross-platform. Ensure your virtual environment is activated and you have set your API keys (`GROQ_API_KEY`, `FIRECRAWL_API_KEY`) in a `.env` file.
+
+### Windows (PowerShell)
+
+```powershell
+# Run the full pipeline
+python run.py --stage all
+
+# Run with resume (uses cached data where available)
+python run.py --stage all --resume
+
+# Run a specific stage
+python run.py --stage classify
+
+# Generate mock audit and immediately regenerate HTML report
+python temp_scripts/mock_audit.py
+```
+
+### Linux / macOS (Bash)
+
+```bash
+# Run the full pipeline
+python3 run.py --stage all
+
+# Run with resume (uses cached data where available)
+python3 run.py --stage all --resume
+
+# Run a specific stage
+python3 run.py --stage classify
+
+# Generate mock audit and immediately regenerate HTML report
+python3 temp_scripts/mock_audit.py
+```
