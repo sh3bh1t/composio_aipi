@@ -540,6 +540,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
                                 <th class="px-6 py-4 cursor-pointer hover:text-white" onclick="sortTable(4)">API <i data-lucide="arrow-up-down" class="inline w-3 h-3 ml-1"></i></th>
                                 <th class="px-6 py-4 cursor-pointer hover:text-white" onclick="sortTable(5)">MCP <i data-lucide="arrow-up-down" class="inline w-3 h-3 ml-1"></i></th>
                                 <th class="px-6 py-4 cursor-pointer hover:text-white" onclick="sortTable(6)">Verdict <i data-lucide="arrow-up-down" class="inline w-3 h-3 ml-1"></i></th>
+                                <th class="px-6 py-4 cursor-pointer hover:text-white" onclick="sortTable(7)">Confidence <i data-lucide="arrow-up-down" class="inline w-3 h-3 ml-1"></i></th>
                             </tr>
                         </thead>
                         <tbody id="tableBody">
@@ -575,6 +576,11 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
                                 <td class="px-6">
                                     <span class="badge {% if record.build_verdict == 'Easy' %}badge-green{% elif record.build_verdict == 'Moderate' %}badge-yellow{% elif record.build_verdict == 'Hard' %}badge-red{% elif record.build_verdict == 'Not Feasible' %}badge-gray{% else %}badge-gray{% endif %}">
                                         {{ record.build_verdict }}
+                                    </span>
+                                </td>
+                                <td class="px-6">
+                                    <span class="badge {% if record.confidence_level == 'High' %}badge-green{% elif record.confidence_level == 'Medium' %}badge-yellow{% else %}badge-red{% endif %}" title="Score: {{ (record.confidence_score * 100)|round(0) }}%">
+                                        {{ record.confidence_level }}{% if record.confidence_level == 'Needs Review' %} <i data-lucide="alert-triangle" class="inline w-3 h-3 ml-1"></i>{% endif %}
                                     </span>
                                 </td>
                             </tr>

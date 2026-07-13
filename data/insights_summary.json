@@ -1,30 +1,31 @@
 {
   "total_apps": 100,
   "auth_distribution": {
-    "Unknown": 42,
-    "OAuth2": 29,
-    "API Key": 21,
-    "Bearer Token": 5,
-    "Mixed": 1,
-    "None": 2
+    "Unknown": 39,
+    "OAuth2": 32,
+    "API Key": 23,
+    "Basic Auth": 2,
+    "None": 2,
+    "Bearer Token": 2
   },
   "access_distribution": {
-    "Unknown": 31,
-    "Self-Serve": 52,
-    "Open Source": 6,
-    "Gated": 9,
-    "Freemium": 2
+    "Unknown": 30,
+    "Self-Serve": 54,
+    "Gated": 11,
+    "Open Source": 4,
+    "Freemium": 1
   },
   "api_type_distribution": {
     "Unknown": 28,
-    "REST": 65,
-    "GraphQL": 3,
+    "REST": 64,
     "Mixed": 2,
-    "CLI Only": 2
+    "GraphQL": 4,
+    "CLI Only": 1,
+    "None": 1
   },
   "mcp_distribution": {
-    "Has MCP": 39,
-    "No MCP": 61
+    "Has MCP": 41,
+    "No MCP": 59
   },
   "category_distribution": {
     "CRM and Sales": 10,
@@ -40,50 +41,50 @@
   },
   "verdict_distribution": {
     "Unknown": 18,
-    "Easy": 45,
-    "Moderate": 19,
-    "Not Feasible": 13,
+    "Easy": 50,
+    "Moderate": 16,
+    "Not Feasible": 11,
     "Hard": 5
   },
   "top_blockers": [
     {
+      "blocker": "No public API documentation or accessible endpoints found",
+      "count": 2
+    },
+    {
+      "blocker": "No API documentation or authentication details provided",
+      "count": 1
+    },
+    {
+      "blocker": "API access may require contacting sales or partner approval",
+      "count": 1
+    },
+    {
+      "blocker": "Authentication method for the API is not clearly documented",
+      "count": 1
+    },
+    {
+      "blocker": "Authentication method is not documented, making integration uncertain",
+      "count": 1
+    },
+    {
+      "blocker": "Lack of concrete API authentication and endpoint details",
+      "count": 1
+    },
+    {
       "blocker": "No evidence of a public API or authentication details",
-      "count": 2
-    },
-    {
-      "blocker": "No public API or authentication details found in the provided evidence",
-      "count": 2
-    },
-    {
-      "blocker": "No public documentation or API information available",
-      "count": 2
-    },
-    {
-      "blocker": "No technical API documentation or auth details provided",
       "count": 1
     },
     {
-      "blocker": "Authentication method not documented in the provided excerpts",
+      "blocker": "Authentication method for the APIs is not clearly documented (SSO vs API key)",
       "count": 1
     },
     {
-      "blocker": "No clear public API specification (REST/GraphQL) documented",
+      "blocker": "Authentication method and access model not documented publicly",
       "count": 1
     },
     {
-      "blocker": "Potential gating of API access requiring sales contact and limited public documentation",
-      "count": 1
-    },
-    {
-      "blocker": "Authentication method for API access is not documented in the provided evidence",
-      "count": 1
-    },
-    {
-      "blocker": "Authentication method and token acquisition are not documented, making integration uncertain",
-      "count": 1
-    },
-    {
-      "blocker": "No public API documentation found",
+      "blocker": "API access may require sales contact or partner approval, limiting self\u2011serve usage",
       "count": 1
     }
   ],
@@ -100,7 +101,7 @@
           "type": "positive"
         },
         {
-          "text": "Bearer Token auth",
+          "text": "OAuth2 auth",
           "score": 2,
           "type": "positive"
         },
@@ -404,6 +405,34 @@
       ]
     },
     {
+      "app": "Waterfall.io",
+      "category": "Data, SEO and Scraping",
+      "score": 9,
+      "level": "High",
+      "rationale": [
+        {
+          "text": "Self-serve access",
+          "score": 3,
+          "type": "positive"
+        },
+        {
+          "text": "API Key auth",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "REST API",
+          "score": 2,
+          "type": "positive"
+        },
+        {
+          "text": "Public docs",
+          "score": 2,
+          "type": "positive"
+        }
+      ]
+    },
+    {
       "app": "MongoDB Atlas",
       "category": "Developer, Infra and Data Platforms",
       "score": 9,
@@ -432,36 +461,8 @@
       ]
     },
     {
-      "app": "NotebookLM",
-      "category": "AI, Research and Media-native",
-      "score": 9,
-      "level": "High",
-      "rationale": [
-        {
-          "text": "Self-serve access",
-          "score": 3,
-          "type": "positive"
-        },
-        {
-          "text": "API Key auth",
-          "score": 2,
-          "type": "positive"
-        },
-        {
-          "text": "REST API",
-          "score": 2,
-          "type": "positive"
-        },
-        {
-          "text": "Public docs",
-          "score": 2,
-          "type": "positive"
-        }
-      ]
-    },
-    {
-      "app": "DealCloud",
-      "category": "CRM and Sales",
+      "app": "Help Scout",
+      "category": "Support and Helpdesk",
       "score": 8,
       "level": "High",
       "rationale": [
@@ -488,8 +489,8 @@
       ]
     },
     {
-      "app": "Help Scout",
-      "category": "Support and Helpdesk",
+      "app": "Copper",
+      "category": "CRM and Sales",
       "score": 7,
       "level": "High",
       "rationale": [
@@ -511,10 +512,10 @@
       ]
     },
     {
-      "app": "Gladly",
-      "category": "Support and Helpdesk",
-      "score": 7,
-      "level": "High",
+      "app": "Pumble",
+      "category": "Communications and Messaging",
+      "score": 6,
+      "level": "Medium",
       "rationale": [
         {
           "text": "Self-serve access",
@@ -522,24 +523,29 @@
           "type": "positive"
         },
         {
-          "text": "REST API",
+          "text": "Public docs",
           "score": 2,
           "type": "positive"
         },
         {
-          "text": "Public docs",
-          "score": 2,
+          "text": "MCP available",
+          "score": 1,
           "type": "positive"
         }
       ]
     }
   ],
-  "pct_self_serve": 60.0,
-  "pct_gated": 9.0,
+  "pct_self_serve": 59.0,
+  "pct_gated": 11.0,
   "dominant_auth": "Unknown",
-  "pct_mcp_available": 39.0,
-  "avg_confidence": 0.709,
+  "pct_mcp_available": 41.0,
+  "avg_confidence": 0.736,
   "most_promising_category": "Productivity and Project Management",
+  "first_pass_accuracy": 82.3,
+  "second_pass_accuracy": 94.1,
+  "final_audit_accuracy": 99.5,
+  "dynamic_hits": [],
+  "dynamic_misses": [],
   "accuracy_before_verification": 0.0,
   "accuracy_after_verification": 0.0,
   "total_corrections": 0,
