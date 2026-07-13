@@ -18,6 +18,9 @@ build/
 # Environment
 .env
 
+# Temp Scripts
+temp_scripts/
+
 # IDE
 .vscode/
 .idea/

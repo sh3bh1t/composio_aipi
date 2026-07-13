@@ -59,6 +59,8 @@ def build_candidate_urls(hint: str) -> list[str]:
     base_domain = ".".join(domain_clean.split(".")[-2:])  # e.g., shopify.dev → shopify.dev
 
     additional_patterns = [
+        f"https://developer.{base_domain}/docs",
+        f"https://developers.{base_domain}/docs",
         f"https://developers.{base_domain}",
         f"https://developer.{base_domain}",
         f"https://docs.{base_domain}",
